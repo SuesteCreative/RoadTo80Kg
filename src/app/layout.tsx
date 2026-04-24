@@ -15,8 +15,19 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "RoadTo80Kg",
-  description: "Diário pessoal — rumo a 80 kg",
+  title: {
+    default: "Road to 80 Kg",
+    template: "%s · Road to 80 Kg",
+  },
+  description: "Diário pessoal de cut — nutrição, treinos e compras no Continente.",
+  applicationName: "Road to 80 Kg",
+  appleWebApp: { capable: true, title: "Road to 80 Kg", statusBarStyle: "black-translucent" },
+  openGraph: {
+    title: "Road to 80 Kg",
+    description: "Diário pessoal de cut — nutrição, treinos e compras.",
+    type: "website",
+    locale: "pt_PT",
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

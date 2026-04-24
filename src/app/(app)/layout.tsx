@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { auth, signOut } from "@/lib/auth/config";
 import { Utensils, Scale, ListChecks, Dumbbell, User, Home, Package, Book, LogOut } from "lucide-react";
 
@@ -20,10 +21,16 @@ export default async function AppLayout({ children }: { children: React.ReactNod
       <header className="relative border-b border-border/70 bg-paper/60 backdrop-blur-sm">
         <div className="topo pointer-events-none absolute inset-0 opacity-60" />
         <div className="relative mx-auto flex max-w-6xl items-baseline justify-between gap-4 px-6 pt-6 pb-2">
-          <Link href="/" className="group flex items-baseline gap-3">
-            <span className="font-display text-[1.85rem] leading-none tracking-tight">
-              Rumo aos <span className="italic text-primary">80</span> kg
-            </span>
+          <Link href="/" className="group flex items-center gap-3">
+            <Image
+              src="/logo-sm.png"
+              alt="Road to 80 Kg"
+              width={44}
+              height={44}
+              priority
+              className="size-11 rounded-md shadow-sm"
+            />
+            <span className="sr-only">Road to 80 Kg</span>
           </Link>
           <div className="flex items-center gap-3 text-sm">
             <span className="hidden text-[13px] text-muted-foreground sm:inline">

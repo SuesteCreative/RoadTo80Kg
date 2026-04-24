@@ -23,4 +23,7 @@ npm-debug.log*
 coverage/
 .eslintcache
 *.tsbuildinfo
+
+# Branding source (kept local; compressed copies live in src/app and public)
+roadto80kg-logo.png
 next-env.d.ts

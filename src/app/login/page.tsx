@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import Image from "next/image";
 import { redirect } from "next/navigation";
 
 export default function LoginPage({
@@ -29,13 +30,18 @@ export default function LoginPage({
     <main className="relative grid min-h-screen place-items-center p-4">
       <div className="topo pointer-events-none fixed inset-0 opacity-80" />
       <div className="relative w-full max-w-sm space-y-6">
-        <header className="space-y-1 text-center">
-          <p className="text-[11px] uppercase tracking-[0.1em] font-medium text-muted-foreground">
+        <header className="flex flex-col items-center space-y-3 text-center">
+          <Image
+            src="/logo.png"
+            alt="Road to 80 Kg"
+            width={120}
+            height={120}
+            priority
+            className="size-28 rounded-xl shadow-md"
+          />
+          <p className="text-[11px] uppercase tracking-[0.2em] font-medium text-muted-foreground">
             Caderno de campo
           </p>
-          <h1 className="font-display text-3xl font-medium tracking-tight">
-            Rumo aos <span className="italic text-primary">80</span> kg
-          </h1>
         </header>
         <Card>
           <CardHeader>
