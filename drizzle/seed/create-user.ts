@@ -9,15 +9,36 @@ import { users, workoutSchedule, workouts } from "../../src/lib/db/schema";
 import { DEFAULT_SCHEDULE } from "./data/workouts";
 import readline from "node:readline/promises";
 
-async function main() {
-  const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
-  const email = (await rl.question("Email: ")).trim().toLowerCase();
-  const name = (await rl.question("Nome a mostrar: ")).trim();
-  const pass = (await rl.question("Palavra-passe (min 8): ")).trim();
-  rl.close();
+function parseArgs(argv: string[]) {
+  const out: Record<string, string> = {};
+  for (const a of argv) {
+    const m = a.match(/^--([^=]+)=(.*)$/);
+    if (m) out[m[1]] = m[2];
+  }
+  return out;
+}
 
+async function main() {
+  const args = parseArgs(process.argv.slice(2));
+  let email = args.email;
+  let name = args.name;
+  let pass = args.password;
+
+  if (!email || !name || !pass) {
+    const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
+    email = email ?? (await rl.question("Email: ")).trim();
+    name = name ?? (await rl.question("Nome a mostrar: ")).trim();
+    pass = pass ?? (await rl.question("Palavra-passe (min 8): ")).trim();
+    rl.close();
+  }
+
+  email = email.toLowerCase();
+  if (!email || !name || !pass) {
+    console.error("Faltam campos.");
+    process.exit(1);
+  }
   if (pass.length < 8) {
-    console.error("Palavra-passe curta.");
+    console.error("Palavra-passe curta (min 8).");
     process.exit(1);
   }
 
@@ -40,7 +61,7 @@ async function main() {
     await db.insert(workoutSchedule).values({ userId: u.id, dayOfWeek: row.day, workoutId: id });
   }
 
-  console.log(`✓ User ${email} (id=${u.id}) criado/actualizado com agenda de treinos.`);
+  console.log(`✓ ${email} (id=${u.id}) — agenda de treinos criada.`);
   process.exit(0);
 }
 main().catch((e) => {

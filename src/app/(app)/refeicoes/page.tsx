@@ -19,8 +19,13 @@ import { planWeek, type PlannableRecipe } from "@/lib/calc/meal-planner";
 import { revalidatePath } from "next/cache";
 import { fmtKcal } from "@/lib/utils";
 
-const MEAL_LABEL = { breakfast: "Pequeno-almoço", lunch: "Almoço", dinner: "Jantar" } as const;
-const MEAL_TYPES = ["breakfast", "lunch", "dinner"] as const;
+const MEAL_LABEL = {
+  breakfast: "Pequeno-almoço",
+  snack: "Snack",
+  lunch: "Almoço (sobras)",
+  dinner: "Jantar",
+} as const;
+const MEAL_TYPES = ["breakfast", "snack", "lunch", "dinner"] as const;
 
 export default async function RefeicoesPage() {
   const session = await auth();
@@ -108,13 +113,16 @@ export default async function RefeicoesPage() {
 
     for (const day of plan) {
       for (const mt of MEAL_TYPES) {
+        // Dinner cooked for 2 meals (today's dinner + next day's lunch leftover).
+        // Lunch row has servings=0 so shopping aggregator doesn't double-count ingredients.
+        const servings = mt === "dinner" ? "2" : mt === "lunch" ? "0" : "1";
         await db.insert(mealPlan).values({
           userId: uid,
           weekStart: ws,
           day: day.day,
           mealType: mt,
           recipeId: day[mt].id,
-          servings: "1",
+          servings,
         });
       }
     }

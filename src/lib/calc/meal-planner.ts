@@ -4,20 +4,25 @@ export type PlannableRecipe = {
   id: number;
   slug: string;
   namePt: string;
-  mealType: "breakfast" | "lunch" | "dinner";
+  mealType: "breakfast" | "snack" | "lunch" | "dinner";
   totals: RecipeTotals;
 };
 
 export type DayPlan = {
   day: number;
   breakfast: PlannableRecipe;
+  snack: PlannableRecipe;
   lunch: PlannableRecipe;
   dinner: PlannableRecipe;
   kcal: number;
   proteinG: number;
 };
 
-const MEAL_SPLIT = { breakfast: 0.25, lunch: 0.4, dinner: 0.35 } as const;
+const MEAL_SPLIT = {
+  breakfast: 0.25,
+  snack: 0.13,
+  dinner: 0.32,
+} as const;
 
 function pickClosest(pool: PlannableRecipe[], targetKcal: number, exclude: Set<number>) {
   let best: PlannableRecipe | null = null;
@@ -36,51 +41,46 @@ function pickClosest(pool: PlannableRecipe[], targetKcal: number, exclude: Set<n
 export function planWeek(
   library: PlannableRecipe[],
   dailyKcal: number,
-  minProteinG: number,
+  _minProteinG: number,
 ): DayPlan[] {
   const breakfasts = library.filter((r) => r.mealType === "breakfast");
-  const lunches = library.filter((r) => r.mealType === "lunch");
+  const snacks = library.filter((r) => r.mealType === "snack");
   const dinners = library.filter((r) => r.mealType === "dinner");
-  if (!breakfasts.length || !lunches.length || !dinners.length) {
-    throw new Error("Recipe library incomplete: need at least 1 of each meal type");
+  if (!breakfasts.length || !dinners.length || !snacks.length) {
+    throw new Error("Receitário incompleto: preciso de pequeno-almoços, snacks e jantares.");
   }
 
   const seenB = new Set<number>();
-  const seenL = new Set<number>();
+  const seenS = new Set<number>();
   const seenD = new Set<number>();
-  const plan: DayPlan[] = [];
 
+  const dinnerPicks: PlannableRecipe[] = [];
+  for (let day = 0; day < 7; day++) {
+    if (seenD.size >= dinners.length) seenD.clear();
+    const d = pickClosest(dinners, dailyKcal * MEAL_SPLIT.dinner, seenD)!;
+    seenD.add(d.id);
+    dinnerPicks.push(d);
+  }
+
+  const plan: DayPlan[] = [];
   for (let day = 0; day < 7; day++) {
     if (seenB.size >= breakfasts.length) seenB.clear();
-    if (seenL.size >= lunches.length) seenL.clear();
-    if (seenD.size >= dinners.length) seenD.clear();
-
+    if (seenS.size >= snacks.length) seenS.clear();
     const b = pickClosest(breakfasts, dailyKcal * MEAL_SPLIT.breakfast, seenB)!;
     seenB.add(b.id);
-
-    let l = pickClosest(lunches, dailyKcal * MEAL_SPLIT.lunch, seenL)!;
-    seenL.add(l.id);
-
-    let d = pickClosest(dinners, dailyKcal * MEAL_SPLIT.dinner, seenD)!;
-    seenD.add(d.id);
-
-    if (b.totals.proteinG + l.totals.proteinG + d.totals.proteinG < minProteinG) {
-      const boost = [...lunches, ...dinners]
-        .filter((r) => r.totals.proteinG > l.totals.proteinG)
-        .sort((a, z) => z.totals.proteinG - a.totals.proteinG)[0];
-      if (boost) {
-        if (boost.mealType === "lunch") l = boost;
-        else if (boost.mealType === "dinner") d = boost;
-      }
-    }
+    const s = pickClosest(snacks, dailyKcal * MEAL_SPLIT.snack, seenS)!;
+    seenS.add(s.id);
+    const d = dinnerPicks[day];
+    const lunch = dinnerPicks[(day + 6) % 7]; // yesterday's dinner = leftovers
 
     plan.push({
       day,
       breakfast: b,
-      lunch: l,
+      snack: s,
+      lunch,
       dinner: d,
-      kcal: b.totals.kcal + l.totals.kcal + d.totals.kcal,
-      proteinG: b.totals.proteinG + l.totals.proteinG + d.totals.proteinG,
+      kcal: b.totals.kcal + s.totals.kcal + lunch.totals.kcal + d.totals.kcal,
+      proteinG: b.totals.proteinG + s.totals.proteinG + lunch.totals.proteinG + d.totals.proteinG,
     });
   }
   return plan;

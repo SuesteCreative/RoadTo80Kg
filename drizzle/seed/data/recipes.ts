@@ -1,7 +1,7 @@
 export type SeedRecipe = {
   slug: string;
   name: string;
-  mealType: "breakfast" | "lunch" | "dinner";
+  mealType: "breakfast" | "snack" | "lunch" | "dinner";
   servings: number;
   prepMin: number;
   instructions: string;
@@ -9,10 +9,10 @@ export type SeedRecipe = {
   tags?: string[];
 };
 
-// Monthly recipe log — 30 recipes (10 breakfasts / 10 lunches / 10 dinners).
-// Portions per serving tuned to Pedro's 2160 kcal target: ~550 kcal breakfast,
-// ~860 kcal lunch, ~750 kcal dinner. Partner's plan uses same recipes with
-// scaled servings (computed at plan time).
+// Monthly recipe log — 30 recipes (10 breakfasts / 10 dinners / 10 snacks).
+// Lunch = leftovers from previous day's dinner (cook 2 portions, eat dinner + next lunch).
+// Daily split for 2160 kcal: breakfast ~550 / snack ~280 / lunch (leftover) ~700 / dinner ~700.
+// Partner eats same recipes with scaled servings (computed at plan time).
 export const SEED_RECIPES: SeedRecipe[] = [
   // BREAKFASTS ~550 kcal, high protein
   {
@@ -158,172 +158,6 @@ export const SEED_RECIPES: SeedRecipe[] = [
       { sku: "3212222", qtyG: 300 },
       { sku: "7001002", qtyG: 150 },
       { sku: "8001004", qtyG: 20 },
-    ],
-  },
-
-  // LUNCHES ~860 kcal
-  {
-    slug: "frango-arroz-brocolos",
-    name: "Frango Grelhado com Arroz Basmati e Brócolos",
-    mealType: "lunch",
-    servings: 1,
-    prepMin: 25,
-    instructions: "1. Temperar peito de frango com sal, pimenta e alho.\n2. Grelhar 5 min de cada lado.\n3. Cozer arroz basmati.\n4. Cozer brócolos 5 min.\n5. Servir com fio de azeite e limão.",
-    items: [
-      { sku: "2143889", qtyG: 200 },
-      { sku: "4001001", qtyG: 80 },
-      { sku: "5001001", qtyG: 200 },
-      { sku: "5001006", qtyG: 5 },
-      { sku: "8001001", qtyG: 10 },
-      { sku: "9001006", qtyG: 20 },
-    ],
-  },
-  {
-    slug: "salmao-batata-doce-espinafres",
-    name: "Salmão Assado com Batata Doce e Espinafres",
-    mealType: "lunch",
-    servings: 1,
-    prepMin: 30,
-    instructions: "1. Temperar salmão com sal, pimenta e limão.\n2. Assar 18 min a 200°C com batata doce em cubos.\n3. Refogar espinafres com alho.",
-    items: [
-      { sku: "6543210", qtyG: 180 },
-      { sku: "4001006", qtyG: 250 },
-      { sku: "5001002", qtyG: 150 },
-      { sku: "5001006", qtyG: 5 },
-      { sku: "8001001", qtyG: 10 },
-    ],
-  },
-  {
-    slug: "bife-bovino-batata-salada",
-    name: "Bife de Bovino com Batata e Salada",
-    mealType: "lunch",
-    servings: 1,
-    prepMin: 25,
-    instructions: "1. Fritar batatas em pouco azeite no forno.\n2. Grelhar hambúrguer de carne picada temperado.\n3. Montar salada de alface, tomate e pepino.",
-    items: [
-      { sku: "7071432", qtyG: 180 },
-      { sku: "4001005", qtyG: 300 },
-      { sku: "5001008", qtyG: 60 },
-      { sku: "5001007", qtyG: 100 },
-      { sku: "5001009", qtyG: 80 },
-      { sku: "8001001", qtyG: 10 },
-    ],
-  },
-  {
-    slug: "pescada-arroz-legumes",
-    name: "Pescada com Arroz e Legumes",
-    mealType: "lunch",
-    servings: 1,
-    prepMin: 25,
-    instructions: "1. Cozer pescada no vapor 8 min.\n2. Cozer arroz.\n3. Saltear cenoura, feijão verde e alho com azeite.",
-    items: [
-      { sku: "7088541", qtyG: 200 },
-      { sku: "4001001", qtyG: 80 },
-      { sku: "5001003", qtyG: 150 },
-      { sku: "5001004", qtyG: 80 },
-      { sku: "5001006", qtyG: 5 },
-      { sku: "8001001", qtyG: 10 },
-    ],
-  },
-  {
-    slug: "esparguete-bolonhesa-magra",
-    name: "Esparguete à Bolonhesa Magra",
-    mealType: "lunch",
-    servings: 1,
-    prepMin: 30,
-    instructions: "1. Refogar cebola e alho com azeite.\n2. Juntar carne picada e alourar.\n3. Acrescentar tomate pelado, orégãos.\n4. Cozinhar 15 min.\n5. Cozer esparguete al dente.",
-    items: [
-      { sku: "4001003", qtyG: 100 },
-      { sku: "7071432", qtyG: 150 },
-      { sku: "5001013", qtyG: 150 },
-      { sku: "5001005", qtyG: 60 },
-      { sku: "5001006", qtyG: 5 },
-      { sku: "9001004", qtyG: 2 },
-      { sku: "8001001", qtyG: 10 },
-    ],
-  },
-  {
-    slug: "lombo-porco-arroz-feijao-preto",
-    name: "Lombo de Porco com Arroz e Feijão Preto",
-    mealType: "lunch",
-    servings: 1,
-    prepMin: 25,
-    instructions: "1. Grelhar lombo de porco temperado com piripiri.\n2. Cozer arroz.\n3. Aquecer feijão preto escorrido.",
-    items: [
-      { sku: "2055678", qtyG: 180 },
-      { sku: "4001002", qtyG: 80 },
-      { sku: "6001002", qtyG: 150 },
-      { sku: "9001003", qtyG: 2 },
-      { sku: "8001001", qtyG: 10 },
-    ],
-  },
-  {
-    slug: "wraps-frango-legumes",
-    name: "Wraps de Frango com Legumes",
-    mealType: "lunch",
-    servings: 1,
-    prepMin: 20,
-    instructions: "1. Saltear frango em tiras com pimento e cebola.\n2. Aquecer wraps.\n3. Rechear e enrolar.",
-    items: [
-      { sku: "2143889", qtyG: 180 },
-      { sku: "4001009", qtyG: 160 },
-      { sku: "5001010", qtyG: 100 },
-      { sku: "5001005", qtyG: 60 },
-      { sku: "5001008", qtyG: 40 },
-      { sku: "8001001", qtyG: 10 },
-    ],
-  },
-  {
-    slug: "salada-atum-grao",
-    name: "Salada de Atum e Grão-de-Bico",
-    mealType: "lunch",
-    servings: 1,
-    prepMin: 10,
-    instructions: "1. Escorrer atum e grão-de-bico.\n2. Misturar com tomate, pepino, cebola e pimento.\n3. Temperar com azeite, limão e orégãos.",
-    items: [
-      { sku: "5554321", qtyG: 180 },
-      { sku: "6001001", qtyG: 200 },
-      { sku: "5001007", qtyG: 100 },
-      { sku: "5001009", qtyG: 80 },
-      { sku: "5001005", qtyG: 40 },
-      { sku: "5001010", qtyG: 60 },
-      { sku: "8001001", qtyG: 15 },
-      { sku: "9001006", qtyG: 20 },
-    ],
-    tags: ["frio", "rápido"],
-  },
-  {
-    slug: "chilli-carne-arroz",
-    name: "Chili de Carne com Arroz",
-    mealType: "lunch",
-    servings: 1,
-    prepMin: 30,
-    instructions: "1. Refogar cebola, alho e pimento.\n2. Juntar carne picada.\n3. Adicionar tomate pelado e feijão preto.\n4. Temperar com piripiri.\n5. Cozer arroz à parte.",
-    items: [
-      { sku: "7071432", qtyG: 150 },
-      { sku: "4001002", qtyG: 70 },
-      { sku: "6001002", qtyG: 120 },
-      { sku: "5001013", qtyG: 150 },
-      { sku: "5001005", qtyG: 60 },
-      { sku: "5001010", qtyG: 60 },
-      { sku: "5001006", qtyG: 5 },
-      { sku: "9001003", qtyG: 2 },
-    ],
-  },
-  {
-    slug: "massa-frango-pesto-rapido",
-    name: "Fusilli Integral com Frango e Courgette",
-    mealType: "lunch",
-    servings: 1,
-    prepMin: 20,
-    instructions: "1. Cozer fusilli al dente.\n2. Saltear frango em cubos com courgette e alho.\n3. Juntar massa e um fio de azeite.",
-    items: [
-      { sku: "4001004", qtyG: 100 },
-      { sku: "2143889", qtyG: 180 },
-      { sku: "5001011", qtyG: 200 },
-      { sku: "5001006", qtyG: 5 },
-      { sku: "8001001", qtyG: 10 },
-      { sku: "9001004", qtyG: 2 },
     ],
   },
 
@@ -486,5 +320,153 @@ export const SEED_RECIPES: SeedRecipe[] = [
       { sku: "8001001", qtyG: 15 },
       { sku: "9001006", qtyG: 15 },
     ],
+  },
+
+  // SNACKS — alvo ~280 kcal, 20-25 g proteína
+  {
+    slug: "snack-iogurte-frutos",
+    name: "Iogurte Grego com Frutos Vermelhos e Amêndoas",
+    mealType: "snack",
+    servings: 1,
+    prepMin: 2,
+    instructions: "1. Misturar iogurte com frutos vermelhos.\n2. Cobrir com amêndoas.",
+    items: [
+      { sku: "3211111", qtyG: 200 },
+      { sku: "7001005", qtyG: 80 },
+      { sku: "8001003", qtyG: 15 },
+    ],
+    tags: ["rápido", "frio"],
+  },
+  {
+    slug: "snack-queijo-fresco-fruta",
+    name: "Queijo Fresco com Banana e Manteiga de Amendoim",
+    mealType: "snack",
+    servings: 1,
+    prepMin: 2,
+    instructions: "1. Servir queijo fresco num prato.\n2. Banana às rodelas por cima.\n3. Cobrir com manteiga de amendoim.",
+    items: [
+      { sku: "3213333", qtyG: 125 },
+      { sku: "7001001", qtyG: 120 },
+      { sku: "8001002", qtyG: 20 },
+    ],
+    tags: ["rápido"],
+  },
+  {
+    slug: "snack-batido-whey",
+    name: "Batido Whey com Leite e Banana",
+    mealType: "snack",
+    servings: 1,
+    prepMin: 3,
+    instructions: "1. Triturar tudo 40 s.\n2. Beber logo.",
+    items: [
+      { sku: "3214444", qtyG: 30 },
+      { sku: "3212222", qtyG: 300 },
+      { sku: "7001001", qtyG: 100 },
+      { sku: "8001002", qtyG: 10 },
+    ],
+    tags: ["rápido"],
+  },
+  {
+    slug: "snack-tosta-atum",
+    name: "Tosta de Atum e Tomate",
+    mealType: "snack",
+    servings: 1,
+    prepMin: 5,
+    instructions: "1. Torrar 2 fatias de pão.\n2. Cobrir com atum escorrido e tomate às rodelas.\n3. Fio de azeite e orégãos.",
+    items: [
+      { sku: "4001007", qtyG: 60 },
+      { sku: "5554321", qtyG: 120 },
+      { sku: "5001007", qtyG: 80 },
+      { sku: "8001001", qtyG: 5 },
+      { sku: "9001004", qtyG: 1 },
+    ],
+  },
+  {
+    slug: "snack-ovos-cozidos",
+    name: "Ovos Cozidos com Pão e Abacate",
+    mealType: "snack",
+    servings: 1,
+    prepMin: 10,
+    instructions: "1. Cozer 2 ovos 8 min.\n2. Torrar pão.\n3. Esmagar abacate, temperar.\n4. Servir juntos.",
+    items: [
+      { sku: "2002002", qtyG: 120 },
+      { sku: "4001007", qtyG: 40 },
+      { sku: "8001005", qtyG: 80 },
+      { sku: "8001001", qtyG: 3 },
+    ],
+  },
+  {
+    slug: "snack-maca-amendoim",
+    name: "Maçã com Manteiga de Amendoim e Whey",
+    mealType: "snack",
+    servings: 1,
+    prepMin: 2,
+    instructions: "1. Cortar maçã em gomos.\n2. Servir com manteiga de amendoim e batido de whey feito com água.",
+    items: [
+      { sku: "7001002", qtyG: 180 },
+      { sku: "8001002", qtyG: 25 },
+      { sku: "3214444", qtyG: 25 },
+    ],
+    tags: ["rápido"],
+  },
+  {
+    slug: "snack-wrap-queijo-peru",
+    name: "Wrap com Queijo e Frango (sobras)",
+    mealType: "snack",
+    servings: 1,
+    prepMin: 4,
+    instructions: "1. Aquecer wrap.\n2. Rechear com frango desfiado, queijo e alface.\n3. Enrolar.",
+    items: [
+      { sku: "4001009", qtyG: 80 },
+      { sku: "2143889", qtyG: 80 },
+      { sku: "3210987", qtyG: 30 },
+      { sku: "5001008", qtyG: 30 },
+    ],
+  },
+  {
+    slug: "snack-requeijao-fruta",
+    name: "Iogurte com Aveia, Nozes e Maçã",
+    mealType: "snack",
+    servings: 1,
+    prepMin: 3,
+    instructions: "1. Misturar iogurte com aveia.\n2. Juntar maçã em cubos e nozes picadas.",
+    items: [
+      { sku: "3211111", qtyG: 200 },
+      { sku: "4001008", qtyG: 30 },
+      { sku: "7001002", qtyG: 120 },
+      { sku: "8001004", qtyG: 15 },
+    ],
+    tags: ["frio"],
+  },
+  {
+    slug: "snack-panqueca-proteica",
+    name: "Mini-Panquecas Proteicas",
+    mealType: "snack",
+    servings: 1,
+    prepMin: 10,
+    instructions: "1. Bater 2 ovos, 1 scoop de whey, 30 g de aveia e 1/2 banana.\n2. Fazer 4 mini-panquecas em frigideira anti-aderente.\n3. Servir com frutos vermelhos.",
+    items: [
+      { sku: "2002002", qtyG: 120 },
+      { sku: "3214444", qtyG: 30 },
+      { sku: "4001008", qtyG: 30 },
+      { sku: "7001001", qtyG: 60 },
+      { sku: "7001005", qtyG: 60 },
+    ],
+  },
+  {
+    slug: "snack-atum-ovos-tomate",
+    name: "Atum com Ovos e Pepino",
+    mealType: "snack",
+    servings: 1,
+    prepMin: 10,
+    instructions: "1. Cozer 2 ovos 8 min.\n2. Misturar com atum escorrido.\n3. Servir com pepino em rodelas e tomate cereja.",
+    items: [
+      { sku: "5554321", qtyG: 120 },
+      { sku: "2002002", qtyG: 120 },
+      { sku: "5001009", qtyG: 100 },
+      { sku: "5001007", qtyG: 80 },
+      { sku: "8001001", qtyG: 5 },
+    ],
+    tags: ["frio", "alta-proteína"],
   },
 ];

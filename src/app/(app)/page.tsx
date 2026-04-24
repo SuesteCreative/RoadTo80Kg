@@ -101,7 +101,7 @@ export default async function Dashboard() {
               {todayMeals.map((m) => (
                 <li key={m.mealType} className="flex items-center justify-between py-2">
                   <span className="text-sm text-muted-foreground">
-                    {{ breakfast: "Pequeno-almoço", lunch: "Almoço", dinner: "Jantar" }[m.mealType]}
+                    {{ breakfast: "Pequeno-almoço", snack: "Snack", lunch: "Almoço (sobras)", dinner: "Jantar" }[m.mealType]}
                   </span>
                   <Link className="text-sm underline" href={`/receitas/${m.recipeSlug}`}>
                     {m.recipeName}

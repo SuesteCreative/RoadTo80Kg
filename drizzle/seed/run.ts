@@ -7,7 +7,7 @@ import { products, recipes, recipeItems, workouts } from "../../src/lib/db/schem
 import { SEED_PRODUCTS } from "./data/products";
 import { SEED_RECIPES } from "./data/recipes";
 import { SEED_WORKOUTS } from "./data/workouts";
-import { sql } from "drizzle-orm";
+import { sql, notInArray } from "drizzle-orm";
 
 async function main() {
   console.log("→ Seeding products…");
@@ -49,6 +49,8 @@ async function main() {
   for (const r of allProducts) if (r.sku) skuToId.set(r.sku, r.id);
 
   console.log("→ Seeding recipes…");
+  const keptSlugs = SEED_RECIPES.map((r) => r.slug);
+  await db.delete(recipes).where(notInArray(recipes.slug, keptSlugs));
   for (const r of SEED_RECIPES) {
     const [inserted] = await db
       .insert(recipes)

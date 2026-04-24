@@ -6,7 +6,7 @@ import Link from "next/link";
 import { recipeTotalsPerServing } from "@/lib/calc/nutrition";
 import { fmtKcal } from "@/lib/utils";
 
-const MEAL_LABEL = { breakfast: "Pequeno-almoço", lunch: "Almoço", dinner: "Jantar" } as const;
+const MEAL_LABEL = { breakfast: "Pequeno-almoço", snack: "Snack", dinner: "Jantar (cozinhar p/ 2 refeições)" } as const;
 
 export default async function ReceitasPage() {
   const rows = await db.select().from(recipes).orderBy(asc(recipes.mealType), asc(recipes.namePt));
@@ -29,12 +29,15 @@ export default async function ReceitasPage() {
     byRecipe.set(it.recipeId, arr);
   }
 
-  const grouped = { breakfast: [] as typeof rows, lunch: [] as typeof rows, dinner: [] as typeof rows };
-  for (const r of rows) grouped[r.mealType].push(r);
+  const grouped = { breakfast: [] as typeof rows, snack: [] as typeof rows, dinner: [] as typeof rows };
+  for (const r of rows) {
+    if (r.mealType === "lunch") continue;
+    grouped[r.mealType].push(r);
+  }
 
   return (
     <div className="space-y-6">
-      {(["breakfast", "lunch", "dinner"] as const).map((mt) => (
+      {(["breakfast", "snack", "dinner"] as const).map((mt) => (
         <section key={mt}>
           <h2 className="mb-3 text-lg font-semibold">{MEAL_LABEL[mt]}</h2>
           <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">

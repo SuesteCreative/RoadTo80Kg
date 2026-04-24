@@ -23,7 +23,7 @@ export const activityEnum = pgEnum("activity_level", [
   "moderate",
   "heavy",
 ]);
-export const mealTypeEnum = pgEnum("meal_type", ["breakfast", "lunch", "dinner"]);
+export const mealTypeEnum = pgEnum("meal_type", ["breakfast", "snack", "lunch", "dinner"]);
 export const unitEnum = pgEnum("unit", ["g", "ml", "un"]);
 export const workoutModeEnum = pgEnum("workout_mode", ["indoor", "outdoor"]);
 export const priceSourceEnum = pgEnum("price_source", ["scrape", "manual"]);
