@@ -69,7 +69,7 @@ export default async function PerfilPage() {
           </div>
           <div className="space-y-2">
             <Label htmlFor="heightCm">Altura (cm)</Label>
-            <Input id="heightCm" name="heightCm" type="number" step="0.1" defaultValue={profile?.heightCm ?? ""} required />
+            <Input id="heightCm" name="heightCm" type="number" step="1" min="120" max="230" placeholder="184" defaultValue={profile?.heightCm ?? ""} required />
           </div>
           <div className="space-y-2">
             <Label>Actividade</Label>
