@@ -1,0 +1,8 @@
+{
+  "crons": [
+    {
+      "path": "/api/cron/scrape-continente",
+      "schedule": "0 22 * * 0"
+    }
+  ]
+}
