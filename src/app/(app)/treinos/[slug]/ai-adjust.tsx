@@ -132,7 +132,7 @@ export default function AiAdjustWorkout({ slug }: { slug: string }) {
                   Proposta
                 </p>
                 <h3 className="font-display text-xl font-medium">{result.name}</h3>
-                <p className="flex items-center gap-1.5 font-mono text-xs text-muted-foreground">
+                <p className="flex items-center gap-1.5 text-xs text-muted-foreground">
                   {result.mode === "indoor" ? (
                     <Dumbbell className="size-3" />
                   ) : (

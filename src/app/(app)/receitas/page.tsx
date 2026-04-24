@@ -83,7 +83,7 @@ export default async function ReceitasPage() {
                   <h3 className="mt-1 font-display text-[1.15rem] font-medium leading-tight transition-colors group-hover:text-primary">
                     {r.namePt}
                   </h3>
-                  <div className="mt-3 flex items-baseline gap-3 font-mono text-xs text-muted-foreground">
+                  <div className="mt-3 flex items-baseline gap-3 text-xs text-muted-foreground">
                     <span className="tabular-nums text-foreground">{totals.kcal} kcal</span>
                     <span>·</span>
                     <span className="tabular-nums">{totals.proteinG} g P</span>

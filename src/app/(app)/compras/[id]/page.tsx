@@ -48,7 +48,7 @@ export default async function ShoppingListDetail({
             Lista · {list.periodStart} — {list.periodEnd}
           </p>
           <h1 className="font-display text-3xl font-medium tracking-tight">Compras</h1>
-          <p className="font-mono text-xs text-muted-foreground">
+          <p className="text-sm text-muted-foreground">
             Total estimado <span className="tabular-nums font-semibold text-foreground">{fmtEur(Number(list.totalEur))}</span>
             {" · "}
             {items.length} produtos

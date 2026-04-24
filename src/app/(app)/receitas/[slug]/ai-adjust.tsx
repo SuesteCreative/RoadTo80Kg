@@ -134,7 +134,7 @@ export default function AiAdjustRecipe({ slug }: { slug: string }) {
                   Proposta
                 </p>
                 <h3 className="font-display text-xl font-medium">{result.name}</h3>
-                <p className="font-mono text-xs text-muted-foreground">
+                <p className="text-xs text-muted-foreground">
                   {result.meal_type} · {result.servings} dose(s) · {result.prep_min} min
                 </p>
               </div>

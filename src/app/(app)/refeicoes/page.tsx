@@ -83,7 +83,7 @@ export default async function RefeicoesPage() {
           <h1 className="font-display text-3xl font-medium tracking-tight">
             Refeições
           </h1>
-          <p className="font-mono text-xs text-muted-foreground">
+          <p className="text-xs text-muted-foreground">
             Alvo diário: <span className="tabular-nums">{t.targetKcal.toLocaleString("pt-PT")}</span> kcal · proteína ≥{" "}
             <span className="tabular-nums">{t.proteinG}</span> g
           </p>
@@ -96,11 +96,11 @@ export default async function RefeicoesPage() {
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-border bg-muted/30">
-                <th className="w-24 p-3 text-left font-mono text-[10px] font-normal uppercase tracking-wider text-muted-foreground"></th>
+                <th className="w-24 p-3 text-left text-[11px] font-normal uppercase tracking-wider text-muted-foreground"></th>
                 {Array.from({ length: 7 }).map((_, d) => (
                   <th
                     key={d}
-                    className={`min-w-[8.5rem] p-3 text-left font-mono text-[10px] font-medium uppercase tracking-[0.15em] ${
+                    className={`min-w-[8.5rem] p-3 text-left text-[11px] font-semibold uppercase tracking-[0.08em] ${
                       d === todayDow ? "text-primary" : "text-muted-foreground"
                     }`}
                   >
@@ -156,8 +156,8 @@ export default async function RefeicoesPage() {
         </div>
       </Card>
 
-      <p className="text-[11px] uppercase tracking-wider font-medium text-muted-foreground">
-        <span className="font-mono normal-case tracking-normal">n×</span> = número total de refeições cozinhadas (pessoas × dias). Default: jantar 4 · PA/snack 2 · almoço 0 (sobras).
+      <p className="text-xs text-muted-foreground">
+        <span className="font-semibold">n×</span> = número total de refeições cozinhadas (pessoas × dias). Default: jantar 4 · pequeno-almoço/snack 2 · almoço 0 (sobras).
       </p>
     </div>
   );

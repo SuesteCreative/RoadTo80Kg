@@ -99,10 +99,13 @@ export default async function Dashboard() {
                 )}
               </h1>
               {targets && (
-                <p className="font-mono text-xs text-muted-foreground">
-                  <span className="tabular-nums">{targets.proteinG}g P</span> · <span className="tabular-nums">{targets.fatG}g G</span> · <span className="tabular-nums">{targets.carbsG}g C</span>
+                <p className="text-sm text-muted-foreground">
+                  <span className="tabular-nums">{targets.proteinG} g</span> proteína ·{" "}
+                  <span className="tabular-nums">{targets.fatG} g</span> gordura ·{" "}
+                  <span className="tabular-nums">{targets.carbsG} g</span> hidratos
                   <span className="mx-2 text-border">·</span>
-                  défice {profile!.deficitKcal} kcal/dia · TDEE {targets.tdee}
+                  défice <span className="tabular-nums">{profile!.deficitKcal}</span> kcal/dia ·
+                  TDEE <span className="tabular-nums">{targets.tdee}</span>
                 </p>
               )}
             </div>

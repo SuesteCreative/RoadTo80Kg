@@ -49,7 +49,7 @@ export default async function ProdutosPage() {
             Catálogo · Continente.pt
           </p>
           <h1 className="font-display text-3xl font-medium tracking-tight">Produtos</h1>
-          <p className="font-mono text-xs text-muted-foreground">
+          <p className="text-xs text-muted-foreground">
             {all.length} produtos monitorizados
           </p>
         </div>

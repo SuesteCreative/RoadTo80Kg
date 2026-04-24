@@ -42,7 +42,7 @@ export default function ServingsEdit({
       >
         −
       </button>
-      <span className="min-w-[1.25rem] text-center font-mono tabular-nums">{value}×</span>
+      <span className="min-w-[1.25rem] text-center tabular-nums font-semibold">{value}×</span>
       <button
         type="button"
         onClick={() => commit(value + 1)}
