@@ -22,5 +22,5 @@ npm-debug.log*
 
 coverage/
 .eslintcache
-.tsbuildinfo
+*.tsbuildinfo
 next-env.d.ts
