@@ -15,6 +15,7 @@ import { computeTargets } from "@/lib/calc/tdee";
 import { recipeTotalsPerServing } from "@/lib/calc/nutrition";
 import { planWeek, type PlannableRecipe } from "@/lib/calc/meal-planner";
 import { revalidatePath } from "next/cache";
+import { regenerateDerivedPlanItems } from "@/lib/db/plan-items";
 
 const MEAL_TYPES = ["breakfast", "snack", "lunch", "dinner"] as const;
 
@@ -96,7 +97,10 @@ export async function regenerateWeek() {
     }
   }
 
+  await regenerateDerivedPlanItems(uid, ws);
+
   revalidatePath("/refeicoes");
+  revalidatePath("/produtos");
   revalidatePath("/");
 
   return {
@@ -119,6 +123,8 @@ export async function updateSlotServings(
     WHERE user_id = ${uid} AND week_start = ${ws}
       AND day = ${day} AND meal_type = ${mealType}
   `);
+  await regenerateDerivedPlanItems(uid, ws);
   revalidatePath("/refeicoes");
+  revalidatePath("/produtos");
   return { servings: clamped };
 }

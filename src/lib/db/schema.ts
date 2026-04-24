@@ -27,6 +27,7 @@ export const mealTypeEnum = pgEnum("meal_type", ["breakfast", "snack", "lunch", 
 export const unitEnum = pgEnum("unit", ["g", "ml", "un"]);
 export const workoutModeEnum = pgEnum("workout_mode", ["indoor", "outdoor"]);
 export const priceSourceEnum = pgEnum("price_source", ["scrape", "manual"]);
+export const planItemSourceEnum = pgEnum("plan_item_source", ["derived", "manual"]);
 export const scrapeStatusEnum = pgEnum("scrape_status", ["ok", "partial", "failed"]);
 export const shoppingStatusEnum = pgEnum("shopping_status", ["draft", "active", "done"]);
 
@@ -225,6 +226,28 @@ export const workoutSchedule = pgTable(
   },
   (t) => ({
     pk: primaryKey({ columns: [t.userId, t.dayOfWeek] }),
+  }),
+);
+
+export const planItems = pgTable(
+  "plan_items",
+  {
+    id: serial("id").primaryKey(),
+    userId: integer("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    weekStart: date("week_start").notNull(),
+    productId: integer("product_id")
+      .notNull()
+      .references(() => products.id, { onDelete: "cascade" }),
+    qtyG: numeric("qty_g", { precision: 10, scale: 2 }).notNull(),
+    source: planItemSourceEnum("source").notNull().default("derived"),
+    excluded: boolean("excluded").notNull().default(false),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
+  },
+  (t) => ({
+    userWeekIdx: index("plan_items_user_week_idx").on(t.userId, t.weekStart),
+    uniq: uniqueIndex("plan_items_uniq").on(t.userId, t.weekStart, t.productId),
   }),
 );
 

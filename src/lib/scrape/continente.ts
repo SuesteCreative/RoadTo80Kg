@@ -72,11 +72,15 @@ function normalize(s: string): string {
     .trim();
 }
 
-export async function scrapeAll(): Promise<{
+export async function scrapeAll(opts?: { productIds?: number[] }): Promise<{
   ok: number;
   errors: { sku: string; reason: string }[];
 }> {
-  const all = await db.select().from(products);
+  let all = await db.select().from(products);
+  if (opts?.productIds && opts.productIds.length > 0) {
+    const set = new Set(opts.productIds);
+    all = all.filter((p) => set.has(p.id));
+  }
   const errors: { sku: string; reason: string }[] = [];
   let ok = 0;
 

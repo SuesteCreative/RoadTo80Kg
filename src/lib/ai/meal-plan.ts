@@ -14,6 +14,7 @@ import { getAnthropic, AI_MODEL } from "./client";
 import { CAVEMAN_RULES_PT } from "./caveman";
 import { pantryForPrompt, formatPantry, userContext, formatUserLine } from "./context";
 import { weekStartISO } from "@/lib/calc/date";
+import { regenerateDerivedPlanItems } from "@/lib/db/plan-items";
 import { revalidatePath } from "next/cache";
 
 const Ingredient = z.object({
@@ -229,7 +230,10 @@ export async function applyMealPlanAdjustments(
     applied++;
   }
 
+  await regenerateDerivedPlanItems(uid, ws);
+
   revalidatePath("/refeicoes");
+  revalidatePath("/produtos");
   revalidatePath("/");
   return { applied };
 }
