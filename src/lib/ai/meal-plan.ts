@@ -178,9 +178,17 @@ export async function adjustWeekPlan(userRequest: string): Promise<WeekAdjustRes
   return parsed;
 }
 
+function canonicalKey(ch: SlotChange): string {
+  const ings = [...ch.recipe.ingredients]
+    .map((i) => `${i.product_sku}:${Math.round(i.qty_g)}`)
+    .sort()
+    .join("|");
+  return `${ch.meal_type}::${ch.recipe.name.trim().toLowerCase()}::${ings}`;
+}
+
 export async function applyMealPlanAdjustments(
   changes: SlotChange[],
-): Promise<{ applied: number }> {
+): Promise<{ applied: number; recipesCreated: number }> {
   const session = await auth();
   if (!session?.user?.id) throw new Error("Não autenticado.");
   const uid = Number(session.user.id);
@@ -190,23 +198,38 @@ export async function applyMealPlanAdjustments(
   const skuToId = new Map<string, number>();
   for (const r of allProducts) if (r.sku) skuToId.set(r.sku, r.id);
 
-  let applied = 0;
+  // Dedupe identical slots (e.g. "7× Café com Leite") into one recipe row.
+  const recipeByKey = new Map<number, SlotChange>();
+  const keyToChanges = new Map<string, SlotChange[]>();
   for (const ch of changes) {
-    const slug = `ai-${ch.meal_type}-d${ch.day}-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 6)}`;
+    const k = canonicalKey(ch);
+    const arr = keyToChanges.get(k) ?? [];
+    arr.push(ch);
+    keyToChanges.set(k, arr);
+  }
+
+  let applied = 0;
+  let recipesCreated = 0;
+  const timestamp = Date.now().toString(36);
+  let seq = 0;
+
+  for (const [, chs] of keyToChanges) {
+    const representative = chs[0];
+    const slug = `ai-${representative.meal_type}-${timestamp}-${(seq++).toString(36)}`;
     const [inserted] = await db
       .insert(recipes)
       .values({
         slug,
-        namePt: ch.recipe.name,
-        mealType: ch.meal_type,
+        namePt: representative.recipe.name,
+        mealType: representative.meal_type,
         servings: 1,
-        prepMin: ch.recipe.prep_min,
-        instructionsMd: ch.recipe.instructions_md,
+        prepMin: representative.recipe.prep_min,
+        instructionsMd: representative.recipe.instructions_md,
         tags: ["ai-ajustada"],
       })
       .returning({ id: recipes.id });
 
-    for (const ing of ch.recipe.ingredients) {
+    for (const ing of representative.recipe.ingredients) {
       const productId = skuToId.get(ing.product_sku);
       if (!productId) continue;
       await db.insert(recipeItems).values({
@@ -215,19 +238,23 @@ export async function applyMealPlanAdjustments(
         qtyG: String(ing.qty_g),
       });
     }
+    recipesCreated++;
+    recipeByKey.set(inserted.id, representative);
 
-    await db
-      .update(mealPlan)
-      .set({ recipeId: inserted.id })
-      .where(
-        and(
-          eq(mealPlan.userId, uid),
-          eq(mealPlan.weekStart, ws),
-          eq(mealPlan.day, ch.day),
-          eq(mealPlan.mealType, ch.meal_type),
-        ),
-      );
-    applied++;
+    for (const ch of chs) {
+      await db
+        .update(mealPlan)
+        .set({ recipeId: inserted.id })
+        .where(
+          and(
+            eq(mealPlan.userId, uid),
+            eq(mealPlan.weekStart, ws),
+            eq(mealPlan.day, ch.day),
+            eq(mealPlan.mealType, ch.meal_type),
+          ),
+        );
+      applied++;
+    }
   }
 
   await regenerateDerivedPlanItems(uid, ws);
@@ -235,5 +262,5 @@ export async function applyMealPlanAdjustments(
   revalidatePath("/refeicoes");
   revalidatePath("/produtos");
   revalidatePath("/");
-  return { applied };
+  return { applied, recipesCreated };
 }
