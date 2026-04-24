@@ -4,6 +4,7 @@ import { eq } from "drizzle-orm";
 import { notFound } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Timer from "./timer";
+import AiAdjustWorkout from "./ai-adjust";
 
 export default async function TreinoDetail({
   params,
@@ -18,11 +19,16 @@ export default async function TreinoDetail({
     <div className="grid gap-4 md:grid-cols-[1fr_1.2fr]">
       <Card>
         <CardHeader>
-          <CardTitle>{w.namePt}</CardTitle>
-          <p className="text-sm text-muted-foreground">
-            {w.mode === "indoor" ? "Em casa" : "Ar livre"} · {w.durationMin} min
-            {w.equipment.length > 0 && ` · ${w.equipment.join(", ")}`}
-          </p>
+          <div className="flex items-start justify-between gap-3">
+            <div className="space-y-1">
+              <CardTitle>{w.namePt}</CardTitle>
+              <p className="text-sm text-muted-foreground">
+                {w.mode === "indoor" ? "Em casa" : "Ar livre"} · {w.durationMin} min
+                {w.equipment.length > 0 && ` · ${w.equipment.join(", ")}`}
+              </p>
+            </div>
+            <AiAdjustWorkout slug={w.slug} />
+          </div>
         </CardHeader>
         <CardContent>
           <pre className="whitespace-pre-wrap font-sans text-sm leading-relaxed">{w.instructionsMd}</pre>

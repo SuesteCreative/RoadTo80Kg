@@ -14,6 +14,7 @@ import { computeTargets } from "@/lib/calc/tdee";
 import { weekStartISO } from "@/lib/calc/date";
 import Link from "next/link";
 import { JourneyBar } from "@/components/journey-bar";
+import CoachWidget from "@/components/coach-widget";
 import { Dumbbell, Trees, ChevronRight } from "lucide-react";
 
 const MEAL_LABEL = {
@@ -195,6 +196,8 @@ export default async function Dashboard() {
           </CardContent>
         </Card>
       </div>
+
+      <CoachWidget />
     </div>
   );
 }

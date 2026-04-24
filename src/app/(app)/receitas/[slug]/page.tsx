@@ -5,6 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { notFound } from "next/navigation";
 import { recipeTotalsPerServing } from "@/lib/calc/nutrition";
 import Link from "next/link";
+import AiAdjustRecipe from "./ai-adjust";
 
 const MEAL_LABEL: Record<string, string> = {
   breakfast: "Pequeno-almoço",
@@ -58,10 +59,13 @@ export default async function ReceitaDetail({
       </Link>
 
       <header className="space-y-3 border-b border-border pb-6">
-        <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-muted-foreground">
-          {MEAL_LABEL[r.mealType] ?? r.mealType} · {r.prepMin} min · {r.servings} dose
-          {r.servings > 1 ? "s" : ""}
-        </p>
+        <div className="flex items-start justify-between gap-4">
+          <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-muted-foreground">
+            {MEAL_LABEL[r.mealType] ?? r.mealType} · {r.prepMin} min · {r.servings} dose
+            {r.servings > 1 ? "s" : ""}
+          </p>
+          <AiAdjustRecipe slug={r.slug} />
+        </div>
         <h1 className="font-display text-4xl font-medium leading-tight tracking-tight md:text-5xl">
           {r.namePt}
         </h1>
