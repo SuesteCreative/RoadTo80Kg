@@ -13,6 +13,7 @@ import { weekStartISO, dayLabelPt } from "@/lib/calc/date";
 import { computeTargets } from "@/lib/calc/tdee";
 import RegenerateButton from "./regenerate-button";
 import ServingsEdit from "./servings-edit";
+import AiWeekAdjust from "./ai-week-adjust";
 
 const MEAL_LABEL = {
   breakfast: "P. Almoço",
@@ -90,6 +91,8 @@ export default async function RefeicoesPage() {
         </div>
         <RegenerateButton />
       </header>
+
+      <AiWeekAdjust />
 
       <Card className="overflow-hidden">
         <div className="overflow-x-auto">
