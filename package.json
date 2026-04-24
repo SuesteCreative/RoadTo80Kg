@@ -10,8 +10,8 @@
     "db:generate": "drizzle-kit generate",
     "db:push": "drizzle-kit push",
     "db:studio": "drizzle-kit studio",
-    "db:seed": "tsx drizzle/seed/run.ts",
-    "seed:user": "tsx drizzle/seed/create-user.ts",
+    "db:seed": "tsx --env-file=.env.local drizzle/seed/run.ts",
+    "seed:user": "tsx --env-file=.env.local drizzle/seed/create-user.ts",
     "test": "vitest run",
     "test:watch": "vitest"
   },
