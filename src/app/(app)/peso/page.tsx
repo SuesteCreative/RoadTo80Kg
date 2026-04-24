@@ -2,19 +2,9 @@ import { auth } from "@/lib/auth/config";
 import { db } from "@/lib/db/client";
 import { weightLogs } from "@/lib/db/schema";
 import { desc, eq } from "drizzle-orm";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
-import { revalidatePath } from "next/cache";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import WeightChart from "./chart";
-import { z } from "zod";
-
-const schema = z.object({
-  loggedOn: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
-  weightKg: z.coerce.number().min(30).max(250),
-  note: z.string().optional(),
-});
+import PesoForm from "./form";
 
 export default async function PesoPage() {
   const session = await auth();
@@ -24,65 +14,68 @@ export default async function PesoPage() {
     .from(weightLogs)
     .where(eq(weightLogs.userId, uid))
     .orderBy(desc(weightLogs.loggedOn))
-    .limit(120);
+    .limit(180);
 
-  async function save(formData: FormData) {
-    "use server";
-    const p = schema.parse(Object.fromEntries(formData));
-    await db
-      .insert(weightLogs)
-      .values({
-        userId: uid,
-        loggedOn: p.loggedOn,
-        weightKg: String(p.weightKg),
-        note: p.note || null,
-      })
-      .onConflictDoUpdate({
-        target: [weightLogs.userId, weightLogs.loggedOn],
-        set: { weightKg: String(p.weightKg), note: p.note || null },
-      });
-    revalidatePath("/peso");
-    revalidatePath("/");
-  }
-
-  const today = new Date().toISOString().slice(0, 10);
   const chartData = [...logs]
     .reverse()
     .map((l) => ({ date: l.loggedOn, kg: Number(l.weightKg) }));
 
-  return (
-    <div className="grid gap-4 md:grid-cols-[1fr_1.5fr]">
-      <Card>
-        <CardHeader><CardTitle>Registar peso</CardTitle></CardHeader>
-        <CardContent>
-          <form action={save} className="space-y-3">
-            <div className="space-y-2">
-              <Label htmlFor="loggedOn">Data</Label>
-              <Input id="loggedOn" name="loggedOn" type="date" defaultValue={today} required />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="weightKg">Peso (kg)</Label>
-              <Input id="weightKg" name="weightKg" type="number" step="0.1" required />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="note">Nota</Label>
-              <Input id="note" name="note" placeholder="opcional" />
-            </div>
-            <Button type="submit">Guardar</Button>
-          </form>
-        </CardContent>
-      </Card>
+  const latest = logs[0];
+  const prev = logs[6] ?? logs[logs.length - 1];
+  const delta7 =
+    latest && prev && prev.id !== latest.id
+      ? Number(latest.weightKg) - Number(prev.weightKg)
+      : null;
 
-      <Card>
-        <CardHeader><CardTitle>Evolução</CardTitle></CardHeader>
-        <CardContent>
-          {chartData.length === 0 ? (
-            <p className="text-sm text-muted-foreground">Sem registos ainda.</p>
-          ) : (
-            <WeightChart data={chartData} />
-          )}
-        </CardContent>
-      </Card>
+  return (
+    <div className="space-y-6">
+      <header className="flex flex-wrap items-baseline justify-between gap-3">
+        <div className="space-y-1">
+          <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-muted-foreground">
+            Registo de peso
+          </p>
+          <h1 className="font-display text-3xl font-medium tracking-tight">Pesagens</h1>
+        </div>
+        {latest && (
+          <div className="flex items-baseline gap-4 font-mono text-[11px] uppercase tracking-wider text-muted-foreground">
+            <span>
+              Actual <strong className="ml-1 font-mono text-foreground">{Number(latest.weightKg).toFixed(1)} kg</strong>
+            </span>
+            {delta7 != null && (
+              <span className={delta7 < 0 ? "text-accent" : delta7 > 0 ? "text-destructive" : undefined}>
+                7 d {delta7 > 0 ? "+" : ""}
+                {delta7.toFixed(1)} kg
+              </span>
+            )}
+          </div>
+        )}
+      </header>
+
+      <div className="grid gap-4 md:grid-cols-[minmax(0,.9fr)_minmax(0,1.6fr)]">
+        <Card>
+          <CardHeader>
+            <CardTitle>Novo registo</CardTitle>
+            <CardDescription>Diário, pela manhã, em jejum.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <PesoForm />
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Trajectória</CardTitle>
+            <CardDescription>Linha fina: pesagens · linha grossa: média 7 dias.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            {chartData.length === 0 ? (
+              <p className="text-sm text-muted-foreground">Sem registos ainda.</p>
+            ) : (
+              <WeightChart data={chartData} />
+            )}
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 }

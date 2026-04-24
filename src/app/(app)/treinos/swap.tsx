@@ -1,15 +1,35 @@
 "use client";
+import { useTransition } from "react";
+import { toast } from "sonner";
 import { swapMode } from "./actions";
 import { Button } from "@/components/ui/button";
+import { ArrowRightLeft } from "lucide-react";
 
 export default function SwapButton({ day, currentMode }: { day: number; currentMode: string }) {
+  const [pending, start] = useTransition();
   return (
-    <form action={swapMode}>
-      <input type="hidden" name="day" value={day} />
-      <input type="hidden" name="mode" value={currentMode} />
-      <Button type="submit" variant="ghost" size="sm" className="px-2 text-xs">
-        Trocar {currentMode === "indoor" ? "→ parque" : "→ casa"}
-      </Button>
-    </form>
+    <Button
+      type="button"
+      variant="ghost"
+      size="sm"
+      className="h-7 px-2 text-[11px]"
+      disabled={pending}
+      onClick={() =>
+        start(async () => {
+          try {
+            const fd = new FormData();
+            fd.set("day", String(day));
+            fd.set("mode", currentMode);
+            await swapMode(fd);
+            toast.success(`Trocado para ${currentMode === "indoor" ? "ar livre" : "sala"}`);
+          } catch (e) {
+            toast.error("Não trocou", { description: (e as Error).message });
+          }
+        })
+      }
+    >
+      <ArrowRightLeft className="size-3" />
+      {currentMode === "indoor" ? "Parque" : "Sala"}
+    </Button>
   );
 }

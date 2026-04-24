@@ -25,36 +25,75 @@ export default async function TreinosPage() {
     .where(eq(workoutSchedule.userId, uid))
     .orderBy(asc(workoutSchedule.dayOfWeek));
 
+  const todayDow = (new Date().getDay() + 6) % 7;
+
   return (
-    <div className="grid gap-3 md:grid-cols-2">
-      {Array.from({ length: 7 }).map((_, d) => {
-        const row = rows.find((r) => r.day === d);
-        return (
-          <Card key={d}>
-            <CardHeader className="flex-row items-center justify-between space-y-0">
-              <CardTitle className="text-base">{dayLabelPt(d)}</CardTitle>
-              {row && (
-                <span className="flex items-center gap-1 text-xs text-muted-foreground">
-                  {row.mode === "indoor" ? <Dumbbell className="size-3.5" /> : <Trees className="size-3.5" />}
-                  {row.mode === "indoor" ? "casa" : "parque"}
-                </span>
-              )}
-            </CardHeader>
-            <CardContent>
-              {row ? (
-                <div className="space-y-2">
-                  <Link href={`/treinos/${row.slug}`} className="text-sm hover:underline">
-                    {row.name} · {row.duration} min
-                  </Link>
-                  <SwapButton day={d} currentMode={row.mode} />
+    <div className="space-y-6">
+      <header className="space-y-1">
+        <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-muted-foreground">
+          Rotina semanal · 30 min/dia
+        </p>
+        <h1 className="font-display text-3xl font-medium tracking-tight">Treinos</h1>
+      </header>
+
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        {Array.from({ length: 7 }).map((_, d) => {
+          const row = rows.find((r) => r.day === d);
+          const isToday = d === todayDow;
+          return (
+            <Card
+              key={d}
+              className={`relative overflow-hidden transition-shadow ${
+                isToday ? "ring-1 ring-primary/40 shadow-[0_4px_20px_-8px_hsl(var(--primary)/0.3)]" : ""
+              }`}
+            >
+              {isToday && <div className="topo pointer-events-none absolute inset-0 opacity-40" />}
+              <CardHeader className="relative space-y-0">
+                <div className="flex items-baseline justify-between">
+                  <CardTitle className="text-base">
+                    <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
+                      {dayLabelPt(d)}
+                    </span>
+                    {isToday && (
+                      <span className="ml-2 inline-block size-1.5 rounded-full bg-primary align-middle" />
+                    )}
+                  </CardTitle>
+                  {row && (
+                    <span className="flex items-center gap-1 font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
+                      {row.mode === "indoor" ? (
+                        <Dumbbell className="size-3" />
+                      ) : (
+                        <Trees className="size-3" />
+                      )}
+                      {row.mode === "indoor" ? "sala" : "parque"}
+                    </span>
+                  )}
                 </div>
-              ) : (
-                <p className="text-sm text-muted-foreground">Descanso.</p>
-              )}
-            </CardContent>
-          </Card>
-        );
-      })}
+              </CardHeader>
+              <CardContent className="relative space-y-3">
+                {row ? (
+                  <>
+                    <Link
+                      href={`/treinos/${row.slug}`}
+                      className="group block space-y-1"
+                    >
+                      <p className="font-display text-[1.1rem] font-medium leading-tight transition-colors group-hover:text-primary">
+                        {row.name}
+                      </p>
+                      <p className="font-mono text-[11px] uppercase tracking-wider text-muted-foreground">
+                        {row.duration} min · começar →
+                      </p>
+                    </Link>
+                    <SwapButton day={d} currentMode={row.mode} />
+                  </>
+                ) : (
+                  <p className="text-sm text-muted-foreground">Descanso.</p>
+                )}
+              </CardContent>
+            </Card>
+          );
+        })}
+      </div>
     </div>
   );
 }

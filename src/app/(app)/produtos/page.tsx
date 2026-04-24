@@ -42,25 +42,33 @@ export default async function ProdutosPage() {
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <p className="text-sm text-muted-foreground">{all.length} produtos</p>
+    <div className="space-y-8">
+      <header className="flex flex-wrap items-end justify-between gap-3">
+        <div className="space-y-1">
+          <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-muted-foreground">
+            Catálogo · Continente.pt
+          </p>
+          <h1 className="font-display text-3xl font-medium tracking-tight">Produtos</h1>
+          <p className="font-mono text-xs text-muted-foreground">
+            {all.length} produtos monitorizados
+          </p>
+        </div>
         <RunScrapeButton />
-      </div>
+      </header>
 
       {[...byCategory.entries()].map(([cat, rows]) => (
-        <section key={cat}>
-          <h2 className="mb-2 text-lg font-semibold">{cat}</h2>
+        <section key={cat} className="space-y-3">
+          <h2 className="font-display text-xl font-medium border-b border-border pb-2">{cat}</h2>
           <Card>
             <CardContent className="p-0">
               <table className="w-full text-sm">
-                <thead className="border-b bg-muted/40 text-left">
-                  <tr>
-                    <th className="p-3 font-medium">Produto</th>
-                    <th className="p-3 font-medium">kcal/100</th>
-                    <th className="p-3 font-medium">Pack</th>
-                    <th className="p-3 font-medium">Preço</th>
-                    <th className="p-3 font-medium">€/kg</th>
+                <thead className="border-b border-border bg-muted/30 text-left">
+                  <tr className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
+                    <th className="p-3 font-normal">Produto</th>
+                    <th className="p-3 font-normal">kcal/100</th>
+                    <th className="p-3 font-normal">Pack</th>
+                    <th className="p-3 font-normal">Preço</th>
+                    <th className="p-3 font-normal">€/kg</th>
                     <th className="p-3" />
                   </tr>
                 </thead>
@@ -68,30 +76,64 @@ export default async function ProdutosPage() {
                   {rows.map((p) => {
                     const price = priceBy.get(p.id);
                     return (
-                      <tr key={p.id} className="border-b last:border-b-0">
+                      <tr key={p.id} className="border-b border-border/50 last:border-b-0 hover:bg-muted/20">
                         <td className="p-3">
                           <div className="flex items-center gap-2">
                             {p.continenteUrl ? (
-                              <Link href={p.continenteUrl} target="_blank" className="hover:underline">{p.namePt}</Link>
+                              <Link
+                                href={p.continenteUrl}
+                                target="_blank"
+                                className="font-display text-[15px] transition-colors hover:text-primary"
+                              >
+                                {p.namePt}
+                              </Link>
                             ) : (
-                              <span>{p.namePt}</span>
+                              <span className="font-display text-[15px]">{p.namePt}</span>
                             )}
-                            {p.needsReview && <span className="rounded bg-amber-100 px-1.5 py-0.5 text-xs text-amber-900">rever</span>}
+                            {p.needsReview && (
+                              <span className="rounded-full border border-amber-600/40 bg-amber-500/10 px-2 py-0.5 font-mono text-[9px] uppercase tracking-wider text-amber-700 dark:text-amber-300">
+                                rever
+                              </span>
+                            )}
                           </div>
-                          <div className="text-xs text-muted-foreground">{p.brand}</div>
+                          <div className="mt-0.5 font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
+                            {p.brand}
+                          </div>
                         </td>
-                        <td className="p-3 tabular-nums">{p.kcalPer100 ?? "—"}</td>
-                        <td className="p-3 tabular-nums">{Number(p.packSizeG)} {p.unit}</td>
-                        <td className="p-3 tabular-nums">
-                          {price ? fmtEur(Number(price.priceEur)) : "—"}
-                          {price?.promo && <span className="ml-1 text-xs text-primary">promo</span>}
-                          {price?.source === "manual" && <span className="ml-1 text-xs text-muted-foreground">manual</span>}
+                        <td className="p-3 font-mono tabular-nums">{p.kcalPer100 ?? "—"}</td>
+                        <td className="p-3 font-mono text-xs tabular-nums text-muted-foreground">
+                          {Number(p.packSizeG)} {p.unit}
                         </td>
-                        <td className="p-3 tabular-nums text-muted-foreground">
+                        <td className="p-3 font-mono tabular-nums">
+                          {price ? (
+                            <span
+                              className={price.promo ? "font-semibold text-primary" : ""}
+                            >
+                              {fmtEur(Number(price.priceEur))}
+                            </span>
+                          ) : (
+                            "—"
+                          )}
+                          {price?.promo && (
+                            <span className="ml-1 rounded-full bg-primary/10 px-1.5 py-0.5 font-mono text-[9px] uppercase tracking-wider text-primary">
+                              promo
+                            </span>
+                          )}
+                          {price?.source === "manual" && (
+                            <span className="ml-1 font-mono text-[9px] uppercase tracking-wider text-muted-foreground">
+                              manual
+                            </span>
+                          )}
+                        </td>
+                        <td className="p-3 font-mono tabular-nums text-muted-foreground">
                           {price?.pricePerKgEur ? fmtEur(Number(price.pricePerKgEur)) : "—"}
                         </td>
                         <td className="p-3 text-right">
-                          <EditPriceButton productId={p.id} name={p.namePt} currentPrice={price ? Number(price.priceEur) : null} />
+                          <EditPriceButton
+                            productId={p.id}
+                            name={p.namePt}
+                            currentPrice={price ? Number(price.priceEur) : null}
+                          />
                         </td>
                       </tr>
                     );

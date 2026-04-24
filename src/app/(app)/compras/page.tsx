@@ -1,12 +1,11 @@
 import { auth } from "@/lib/auth/config";
 import { db } from "@/lib/db/client";
-import { shoppingLists, shoppingItems, products } from "@/lib/db/schema";
+import { shoppingLists } from "@/lib/db/schema";
 import { desc, eq } from "drizzle-orm";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { fmtEur } from "@/lib/utils";
-import { generateBiweekly } from "./actions";
+import GenerateButton from "./generate-button";
 
 export default async function ComprasPage() {
   const session = await auth();
@@ -19,25 +18,37 @@ export default async function ComprasPage() {
     .limit(10);
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
+      <header className="space-y-1">
+        <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-muted-foreground">
+          Mantimentos
+        </p>
+        <h1 className="font-display text-3xl font-medium tracking-tight">Listas de compras</h1>
+      </header>
+
       <Card>
-        <CardHeader className="flex-row items-center justify-between space-y-0">
-          <CardTitle>Listas de compras</CardTitle>
-          <form action={generateBiweekly}>
-            <Button type="submit" size="sm">Gerar próximas 2 semanas</Button>
-          </form>
+        <CardHeader className="flex-row items-center justify-between space-y-0 gap-3">
+          <CardTitle>Biquinzenais</CardTitle>
+          <GenerateButton />
         </CardHeader>
         <CardContent>
           {lists.length === 0 ? (
             <p className="text-sm text-muted-foreground">Sem listas. Gera a próxima a partir do plano.</p>
           ) : (
-            <ul className="divide-y">
+            <ul className="divide-y divide-border/60">
               {lists.map((l) => (
-                <li key={l.id} className="flex items-center justify-between py-2 text-sm">
-                  <Link href={`/compras/${l.id}`} className="hover:underline">
-                    {l.periodStart} → {l.periodEnd}
+                <li key={l.id} className="group flex items-center justify-between py-3 text-sm first:pt-0 last:pb-0">
+                  <Link
+                    href={`/compras/${l.id}`}
+                    className="flex items-baseline gap-3 font-display text-base transition-colors group-hover:text-primary"
+                  >
+                    <span>{l.periodStart}</span>
+                    <span className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">→</span>
+                    <span>{l.periodEnd}</span>
                   </Link>
-                  <span className="text-muted-foreground tabular-nums">{fmtEur(Number(l.totalEur))}</span>
+                  <span className="font-mono text-sm tabular-nums text-muted-foreground">
+                    {fmtEur(Number(l.totalEur))}
+                  </span>
                 </li>
               ))}
             </ul>

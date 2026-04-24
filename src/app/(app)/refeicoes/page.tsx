@@ -4,25 +4,19 @@ import {
   mealPlan,
   profiles,
   recipes,
-  recipeItems,
-  products,
   weightLogs,
 } from "@/lib/db/schema";
 import { and, desc, eq } from "drizzle-orm";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { weekStartISO, dayLabelPt } from "@/lib/calc/date";
 import { computeTargets } from "@/lib/calc/tdee";
-import { recipeTotalsPerServing } from "@/lib/calc/nutrition";
-import { planWeek, type PlannableRecipe } from "@/lib/calc/meal-planner";
-import { revalidatePath } from "next/cache";
-import { fmtKcal } from "@/lib/utils";
+import RegenerateButton from "./regenerate-button";
 
 const MEAL_LABEL = {
-  breakfast: "Pequeno-almoço",
+  breakfast: "P. Almoço",
   snack: "Snack",
-  lunch: "Almoço (sobras)",
+  lunch: "Almoço",
   dinner: "Jantar",
 } as const;
 const MEAL_TYPES = ["breakfast", "snack", "lunch", "dinner"] as const;
@@ -44,7 +38,9 @@ export default async function RefeicoesPage() {
     return (
       <p className="text-sm">
         Falta perfil ou peso inicial.{" "}
-        <Link href="/perfil" className="underline">Configurar →</Link>
+        <Link href="/perfil" className="underline decoration-primary/40 underline-offset-4">
+          Configurar →
+        </Link>
       </p>
     );
   }
@@ -70,98 +66,70 @@ export default async function RefeicoesPage() {
     .innerJoin(recipes, eq(recipes.id, mealPlan.recipeId))
     .where(and(eq(mealPlan.userId, uid), eq(mealPlan.weekStart, ws)));
 
-  async function regenerate() {
-    "use server";
-    const allRecipes = await db.select().from(recipes);
-    const allItems = await db
-      .select({
-        recipeId: recipeItems.recipeId,
-        qtyG: recipeItems.qtyG,
-        kcalPer100: products.kcalPer100,
-        proteinG: products.proteinG,
-        carbsG: products.carbsG,
-        fatG: products.fatG,
-      })
-      .from(recipeItems)
-      .innerJoin(products, eq(products.id, recipeItems.productId));
-
-    const library: PlannableRecipe[] = allRecipes.map((r) => {
-      const ings = allItems
-        .filter((i) => i.recipeId === r.id)
-        .map((i) => ({
-          qtyG: Number(i.qtyG),
-          product: {
-            kcalPer100: Number(i.kcalPer100),
-            proteinG: Number(i.proteinG),
-            carbsG: Number(i.carbsG),
-            fatG: Number(i.fatG),
-          },
-        }));
-      return {
-        id: r.id,
-        slug: r.slug,
-        namePt: r.namePt,
-        mealType: r.mealType,
-        totals: recipeTotalsPerServing(ings, r.servings),
-      };
-    });
-    const plan = planWeek(library, t.targetKcal, Math.round(t.proteinG * 0.9));
-
-    await db
-      .delete(mealPlan)
-      .where(and(eq(mealPlan.userId, uid), eq(mealPlan.weekStart, ws)));
-
-    for (const day of plan) {
-      for (const mt of MEAL_TYPES) {
-        // Dinner cooked for 2 meals (today's dinner + next day's lunch leftover).
-        // Lunch row has servings=0 so shopping aggregator doesn't double-count ingredients.
-        const servings = mt === "dinner" ? "2" : mt === "lunch" ? "0" : "1";
-        await db.insert(mealPlan).values({
-          userId: uid,
-          weekStart: ws,
-          day: day.day,
-          mealType: mt,
-          recipeId: day[mt].id,
-          servings,
-        });
-      }
-    }
-    revalidatePath("/refeicoes");
-    revalidatePath("/");
-  }
-
   const byCell = new Map<string, (typeof current)[number]>();
   for (const row of current) byCell.set(`${row.day}-${row.mealType}`, row);
 
+  const todayDow = (new Date().getDay() + 6) % 7;
+
   return (
-    <div className="space-y-4">
-      <Card>
-        <CardHeader className="flex-row items-center justify-between space-y-0">
-          <CardTitle>Semana {ws} — alvo {fmtKcal(t.targetKcal)} / dia</CardTitle>
-          <form action={regenerate}>
-            <Button type="submit" size="sm">Regenerar semana</Button>
-          </form>
-        </CardHeader>
-        <CardContent className="overflow-x-auto p-0">
+    <div className="space-y-6">
+      <header className="flex flex-wrap items-baseline justify-between gap-3">
+        <div className="space-y-1">
+          <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-muted-foreground">
+            Plano semanal — {ws}
+          </p>
+          <h1 className="font-display text-3xl font-medium tracking-tight">
+            Refeições
+          </h1>
+          <p className="font-mono text-xs text-muted-foreground">
+            Alvo diário: <span className="tabular-nums">{t.targetKcal.toLocaleString("pt-PT")}</span> kcal · proteína ≥{" "}
+            <span className="tabular-nums">{t.proteinG}</span> g
+          </p>
+        </div>
+        <RegenerateButton />
+      </header>
+
+      <Card className="overflow-hidden">
+        <div className="overflow-x-auto">
           <table className="w-full text-sm">
-            <thead className="border-b bg-muted/40">
-              <tr>
-                <th className="p-2 text-left font-medium"></th>
+            <thead>
+              <tr className="border-b border-border bg-muted/30">
+                <th className="w-24 p-3 text-left font-mono text-[10px] font-normal uppercase tracking-wider text-muted-foreground"></th>
                 {Array.from({ length: 7 }).map((_, d) => (
-                  <th key={d} className="p-2 text-left font-medium">{dayLabelPt(d)}</th>
+                  <th
+                    key={d}
+                    className={`min-w-[8.5rem] p-3 text-left font-mono text-[10px] font-medium uppercase tracking-[0.15em] ${
+                      d === todayDow ? "text-primary" : "text-muted-foreground"
+                    }`}
+                  >
+                    <span className="flex items-baseline gap-1.5">
+                      {dayLabelPt(d)}
+                      {d === todayDow && <span className="size-1.5 rounded-full bg-primary" />}
+                    </span>
+                  </th>
                 ))}
               </tr>
             </thead>
             <tbody>
               {MEAL_TYPES.map((mt) => (
-                <tr key={mt} className="border-b last:border-b-0">
-                  <td className="p-2 align-top text-sm text-muted-foreground">{MEAL_LABEL[mt]}</td>
+                <tr key={mt} className="border-b border-border/50 last:border-b-0">
+                  <td className="p-3 align-top font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
+                    {MEAL_LABEL[mt]}
+                  </td>
                   {Array.from({ length: 7 }).map((_, d) => {
                     const cell = byCell.get(`${d}-${mt}`);
                     return (
-                      <td key={d} className="p-2 align-top">
+                      <td
+                        key={d}
+                        className={`p-3 align-top ${d === todayDow ? "bg-primary/[0.035]" : ""}`}
+                      >
                         {cell ? (
-                          <Link href={`/receitas/${cell.recipeSlug}`} className="text-xs hover:underline">
+                          <Link
+                            href={`/receitas/${cell.recipeSlug}`}
+                            className={`block font-display text-[0.95rem] leading-tight transition-colors hover:text-primary ${
+                              mt === "lunch" ? "italic text-foreground/70" : ""
+                            }`}
+                          >
                             {cell.recipeName}
                           </Link>
                         ) : (
@@ -174,8 +142,12 @@ export default async function RefeicoesPage() {
               ))}
             </tbody>
           </table>
-        </CardContent>
+        </div>
       </Card>
+
+      <p className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
+        Almoço em itálico = sobras do jantar do dia anterior · cozinhar jantares a dobrar
+      </p>
     </div>
   );
 }

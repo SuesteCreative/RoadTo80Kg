@@ -41,27 +41,52 @@ export default async function ShoppingListDetail({
   const exportText = `Lista ${list.periodStart} → ${list.periodEnd}\n\n${lines.join("\n")}\n\nTotal: ${fmtEur(Number(list.totalEur))}`;
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
+      <header className="flex flex-wrap items-end justify-between gap-3">
+        <div className="space-y-1">
+          <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-muted-foreground">
+            Lista · {list.periodStart} — {list.periodEnd}
+          </p>
+          <h1 className="font-display text-3xl font-medium tracking-tight">Compras</h1>
+          <p className="font-mono text-xs text-muted-foreground">
+            Total estimado <span className="tabular-nums font-semibold text-foreground">{fmtEur(Number(list.totalEur))}</span>
+            {" · "}
+            {items.length} produtos
+          </p>
+        </div>
+        <ExportButton text={exportText} />
+      </header>
+
       <Card>
-        <CardHeader className="flex-row items-center justify-between space-y-0">
-          <div>
-            <CardTitle>{list.periodStart} → {list.periodEnd}</CardTitle>
-            <p className="text-sm text-muted-foreground">Total estimado {fmtEur(Number(list.totalEur))}</p>
-          </div>
-          <ExportButton text={exportText} />
-        </CardHeader>
         <CardContent className="p-0">
-          <ul className="divide-y">
+          <ul className="divide-y divide-border/60">
             {items.map((it) => (
-              <li key={it.id} className="flex items-center gap-3 p-3">
+              <li
+                key={it.id}
+                className={`flex items-center gap-3 p-4 transition-colors ${
+                  it.checked ? "bg-muted/20" : "hover:bg-muted/10"
+                }`}
+              >
                 <ItemCheckbox id={it.id} listId={list.id} checked={it.checked} />
-                <div className="flex-1">
-                  <div className={`text-sm ${it.checked ? "line-through text-muted-foreground" : ""}`}>{it.namePt}</div>
-                  <div className="text-xs text-muted-foreground">{it.category}</div>
+                <div className="flex-1 min-w-0">
+                  <div
+                    className={`font-display text-[15px] leading-tight transition-all ${
+                      it.checked ? "line-through text-muted-foreground" : ""
+                    }`}
+                  >
+                    {it.namePt}
+                  </div>
+                  <div className="mt-0.5 font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
+                    {it.category}
+                  </div>
                 </div>
-                <div className="text-right tabular-nums">
-                  <div className="text-sm">{Number(it.qtyUnits)}× · {Number(it.qtyG)} {it.unit}</div>
-                  <div className="text-xs text-muted-foreground">{it.priceEur ? fmtEur(Number(it.priceEur)) : "—"}</div>
+                <div className="shrink-0 text-right font-mono tabular-nums">
+                  <div className="text-[13px]">
+                    {Number(it.qtyUnits)}× · {Number(it.qtyG)} {it.unit}
+                  </div>
+                  <div className="text-xs text-muted-foreground">
+                    {it.priceEur ? fmtEur(Number(it.priceEur)) : "—"}
+                  </div>
                 </div>
               </li>
             ))}

@@ -14,7 +14,6 @@ import { revalidatePath } from "next/cache";
 import { addDays, format } from "date-fns";
 import { weekStartISO } from "@/lib/calc/date";
 import { aggregateShopping } from "@/lib/calc/shopping";
-import { redirect } from "next/navigation";
 
 export async function generateBiweekly() {
   const session = await auth();
@@ -80,7 +79,7 @@ export async function generateBiweekly() {
   }
 
   revalidatePath("/compras");
-  redirect(`/compras/${list.id}`);
+  return { listId: list.id, itemCount: aggregated.length, totalEur: Number(total.toFixed(2)) };
 }
 
 export async function toggleItem(formData: FormData) {

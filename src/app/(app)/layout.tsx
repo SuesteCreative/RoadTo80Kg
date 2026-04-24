@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { auth, signOut } from "@/lib/auth/config";
-import { Button } from "@/components/ui/button";
-import { Utensils, Scale, ListChecks, Dumbbell, User, Home, Package, Book } from "lucide-react";
+import { Utensils, Scale, ListChecks, Dumbbell, User, Home, Package, Book, LogOut } from "lucide-react";
 
 const NAV = [
   { href: "/", label: "Hoje", icon: Home },
@@ -17,26 +16,42 @@ const NAV = [
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
   const session = await auth();
   return (
-    <div className="flex min-h-screen flex-col">
-      <header className="border-b">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
-          <Link href="/" className="font-semibold tracking-tight">RoadTo80Kg</Link>
+    <div className="relative flex min-h-screen flex-col">
+      <header className="relative border-b border-border/70 bg-paper/60 backdrop-blur-sm">
+        <div className="topo pointer-events-none absolute inset-0 opacity-60" />
+        <div className="relative mx-auto flex max-w-6xl items-baseline justify-between gap-4 px-6 pt-6 pb-2">
+          <Link href="/" className="group flex items-baseline gap-3">
+            <span className="font-display text-[1.65rem] font-medium leading-none tracking-tight">
+              Rumo aos <span className="italic text-primary">80</span> kg
+            </span>
+            <span className="hidden font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground md:inline">
+              Caderno de campo
+            </span>
+          </Link>
           <div className="flex items-center gap-3 text-sm">
-            <span className="text-muted-foreground">{session?.user?.name}</span>
+            <span className="hidden font-mono text-[11px] uppercase tracking-wider text-muted-foreground sm:inline">
+              {session?.user?.name}
+            </span>
             <form action={async () => { "use server"; await signOut({ redirectTo: "/login" }); }}>
-              <Button type="submit" variant="ghost" size="sm">Sair</Button>
+              <button
+                type="submit"
+                className="group flex items-center gap-1.5 rounded-full border border-border/80 bg-background/60 px-3 py-1 text-xs text-muted-foreground transition hover:border-primary/40 hover:text-primary"
+              >
+                <LogOut className="size-3.5" />
+                <span>Sair</span>
+              </button>
             </form>
           </div>
         </div>
-        <nav className="mx-auto max-w-6xl overflow-x-auto px-4 pb-2">
+        <nav className="relative mx-auto max-w-6xl overflow-x-auto px-4 pb-3 pt-1">
           <ul className="flex gap-1">
             {NAV.map(({ href, label, icon: Icon }) => (
               <li key={href}>
                 <Link
                   href={href}
-                  className="flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm hover:bg-accent"
+                  className="group flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[13px] text-foreground/70 transition-colors hover:bg-secondary/70 hover:text-foreground"
                 >
-                  <Icon className="size-4" />
+                  <Icon className="size-3.5 text-muted-foreground group-hover:text-primary" />
                   {label}
                 </Link>
               </li>
@@ -44,7 +59,14 @@ export default async function AppLayout({ children }: { children: React.ReactNod
           </ul>
         </nav>
       </header>
-      <main className="mx-auto w-full max-w-6xl flex-1 p-4">{children}</main>
+      <main className="relative mx-auto w-full max-w-6xl flex-1 px-4 py-8 md:px-6">
+        {children}
+      </main>
+      <footer className="border-t border-border/70 py-6">
+        <p className="mx-auto max-w-6xl px-6 font-mono text-[10px] uppercase tracking-[0.25em] text-muted-foreground">
+          Expedição pessoal · Lisboa · Continente.pt
+        </p>
+      </footer>
     </div>
   );
 }
