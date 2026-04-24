@@ -12,7 +12,7 @@ import {
 import { auth } from "@/lib/auth/config";
 import { getAnthropic, AI_MODEL } from "./client";
 import { CAVEMAN_RULES_PT } from "./caveman";
-import { pantryForPrompt, formatPantry, userContext, formatUserLine } from "./context";
+import { pantryForPrompt, formatPantry, userContext, formatUserLine, formatUserRules } from "./context";
 import { weekStartISO } from "@/lib/calc/date";
 import { regenerateDerivedPlanItems } from "@/lib/db/plan-items";
 import { revalidatePath } from "next/cache";
@@ -83,6 +83,7 @@ export async function adjustWeekPlan(userRequest: string): Promise<WeekAdjustRes
   const pantry = await pantryForPrompt();
   const ctx = await userContext(uid, user.displayName);
 
+  const rules = formatUserRules(ctx);
   const system = [
     CAVEMAN_RULES_PT,
     "",
@@ -90,6 +91,7 @@ export async function adjustWeekPlan(userRequest: string): Promise<WeekAdjustRes
     "",
     "CONTEXTO",
     formatUserLine(ctx),
+    rules ? "\n" + rules : "",
     "",
     "PANTRY (SKU · nome · categoria · macros/100g) — apenas estes produtos permitidos:",
     formatPantry(pantry),

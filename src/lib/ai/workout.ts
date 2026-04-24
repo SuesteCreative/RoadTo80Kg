@@ -6,7 +6,7 @@ import { workouts, users } from "@/lib/db/schema";
 import { auth } from "@/lib/auth/config";
 import { getAnthropic, AI_MODEL } from "./client";
 import { CAVEMAN_RULES_PT } from "./caveman";
-import { userContext, formatUserLine } from "./context";
+import { userContext, formatUserLine, formatUserRules } from "./context";
 import { revalidatePath } from "next/cache";
 
 const AdjustedWorkout = z.object({
@@ -43,6 +43,7 @@ export async function suggestWorkoutAdjustment(
     w.instructionsMd,
   ].join("\n");
 
+  const rules = formatUserRules(ctx);
   const system = [
     CAVEMAN_RULES_PT,
     "",
@@ -50,6 +51,7 @@ export async function suggestWorkoutAdjustment(
     "",
     "CONTEXTO",
     formatUserLine(ctx),
+    rules ? "\n" + rules : "",
     "",
     "REGRAS:",
     "- mode 'indoor' = sala em casa (peso corporal, garrafas de água). 'outdoor' = parque/rua (corrida, peso corporal).",

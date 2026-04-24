@@ -38,6 +38,7 @@ export type UserContext = {
   carbsG: number | null;
   currentWeightKg: number | null;
   targetWeightKg: number | null;
+  aiNotes: string | null;
 };
 
 export async function userContext(uid: number, displayName: string): Promise<UserContext> {
@@ -58,6 +59,7 @@ export async function userContext(uid: number, displayName: string): Promise<Use
       carbsG: null,
       currentWeightKg: latest ? Number(latest.weightKg) : null,
       targetWeightKg: profile ? Number(profile.targetWeightKg) : null,
+      aiNotes: profile?.aiNotes ?? null,
     };
   }
   const t = computeTargets({
@@ -77,6 +79,7 @@ export async function userContext(uid: number, displayName: string): Promise<Use
     carbsG: t.carbsG,
     currentWeightKg: Number(latest.weightKg),
     targetWeightKg: Number(profile.targetWeightKg),
+    aiNotes: profile.aiNotes ?? null,
   };
 }
 
@@ -85,4 +88,12 @@ export function formatUserLine(ctx: UserContext): string {
     return `Utilizador: ${ctx.displayName}. Perfil incompleto.`;
   }
   return `Utilizador: ${ctx.displayName}. Alvo ${ctx.targetKcal} kcal/dia (P${ctx.proteinG} F${ctx.fatG} C${ctx.carbsG}). Peso ${ctx.currentWeightKg}→${ctx.targetWeightKg} kg.`;
+}
+
+export function formatUserRules(ctx: UserContext): string {
+  if (!ctx.aiNotes || ctx.aiNotes.trim().length === 0) return "";
+  return [
+    "REGRAS DO UTILIZADOR (respeita SEMPRE; se entrar em conflito com o pedido, prioriza estas regras e explica no summary/notes):",
+    ctx.aiNotes.trim(),
+  ].join("\n");
 }

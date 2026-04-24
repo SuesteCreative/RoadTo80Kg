@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { auth, signOut } from "@/lib/auth/config";
-import { Utensils, Scale, ListChecks, Dumbbell, User, Home, Package, Book, LogOut } from "lucide-react";
+import { Utensils, Scale, ListChecks, Dumbbell, User, Home, Package, Book, LogOut, Settings } from "lucide-react";
 
 const NAV = [
   { href: "/", label: "Hoje", icon: Home },
@@ -12,6 +12,7 @@ const NAV = [
   { href: "/produtos", label: "Produtos", icon: Package },
   { href: "/compras", label: "Compras", icon: ListChecks },
   { href: "/treinos", label: "Treinos", icon: Dumbbell },
+  { href: "/definicoes", label: "Definições", icon: Settings },
 ];
 
 export default async function AppLayout({ children }: { children: React.ReactNode }) {

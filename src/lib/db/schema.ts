@@ -49,6 +49,7 @@ export const profiles = pgTable("profiles", {
   activityLevel: activityEnum("activity_level").notNull(),
   targetWeightKg: numeric("target_weight_kg", { precision: 5, scale: 1 }).notNull(),
   deficitKcal: integer("deficit_kcal").notNull().default(300),
+  aiNotes: text("ai_notes"),
   updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
 });
 

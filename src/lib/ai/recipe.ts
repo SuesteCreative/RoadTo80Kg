@@ -6,7 +6,7 @@ import { products, recipes, recipeItems, users } from "@/lib/db/schema";
 import { auth } from "@/lib/auth/config";
 import { getAnthropic, AI_MODEL } from "./client";
 import { CAVEMAN_RULES_PT } from "./caveman";
-import { pantryForPrompt, formatPantry, userContext, formatUserLine } from "./context";
+import { pantryForPrompt, formatPantry, userContext, formatUserLine, formatUserRules } from "./context";
 import { revalidatePath } from "next/cache";
 
 const AdjustedRecipe = z.object({
@@ -65,6 +65,7 @@ export async function suggestRecipeAdjustment(
     recipe.instructionsMd,
   ].join("\n");
 
+  const rules = formatUserRules(ctx);
   const system = [
     CAVEMAN_RULES_PT,
     "",
@@ -72,6 +73,7 @@ export async function suggestRecipeAdjustment(
     "",
     `CONTEXTO`,
     formatUserLine(ctx),
+    rules ? "\n" + rules : "",
     "",
     "PANTRY (SKU · nome · categoria · macros/100g) — apenas estes produtos são permitidos:",
     formatPantry(pantry),

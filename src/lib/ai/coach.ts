@@ -5,7 +5,7 @@ import { users } from "@/lib/db/schema";
 import { auth } from "@/lib/auth/config";
 import { getAnthropic, AI_MODEL } from "./client";
 import { CAVEMAN_RULES_PT } from "./caveman";
-import { userContext, formatUserLine } from "./context";
+import { userContext, formatUserLine, formatUserRules } from "./context";
 
 export async function askCoach(question: string): Promise<string> {
   const session = await auth();
@@ -14,6 +14,7 @@ export async function askCoach(question: string): Promise<string> {
   const [user] = await db.select().from(users).where(eq(users.id, uid));
   const ctx = await userContext(uid, user.displayName);
 
+  const rules = formatUserRules(ctx);
   const system = [
     CAVEMAN_RULES_PT,
     "",
@@ -21,6 +22,7 @@ export async function askCoach(question: string): Promise<string> {
     "",
     "CONTEXTO",
     formatUserLine(ctx),
+    rules ? "\n" + rules : "",
     "",
     "REGRAS:",
     "- Markdown curto: parágrafos de 1-3 frases, bullets * quando adequado.",
