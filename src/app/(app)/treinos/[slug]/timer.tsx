@@ -75,7 +75,7 @@ export default function Timer({ defaultMinutes }: { defaultMinutes: number }) {
         >
           {fmt(seconds)}
         </p>
-        <p className="mt-3 font-mono text-[10px] uppercase tracking-[0.3em] text-muted-foreground">
+        <p className="mt-3 text-[11px] uppercase tracking-[0.1em] font-medium text-muted-foreground">
           {seconds === 0 ? "concluído" : running ? "em curso" : "pausado"}
         </p>
       </div>
@@ -109,7 +109,7 @@ export default function Timer({ defaultMinutes }: { defaultMinutes: number }) {
             value={intervalSec}
             onChange={(e) => setIntervalSec(Math.max(5, Number(e.target.value) || 45))}
           />
-          <span className="font-mono text-xs uppercase tracking-wider text-muted-foreground">seg</span>
+          <span className="text-xs uppercase tracking-wider font-medium text-muted-foreground">seg</span>
         </div>
         <p className="text-[11px] text-muted-foreground">
           Sinal ao fim do tempo + a cada intervalo (trocas de exercício).

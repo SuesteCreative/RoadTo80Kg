@@ -21,15 +21,12 @@ export default async function AppLayout({ children }: { children: React.ReactNod
         <div className="topo pointer-events-none absolute inset-0 opacity-60" />
         <div className="relative mx-auto flex max-w-6xl items-baseline justify-between gap-4 px-6 pt-6 pb-2">
           <Link href="/" className="group flex items-baseline gap-3">
-            <span className="font-display text-[1.65rem] font-medium leading-none tracking-tight">
+            <span className="font-display text-[1.85rem] leading-none tracking-tight">
               Rumo aos <span className="italic text-primary">80</span> kg
-            </span>
-            <span className="hidden font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground md:inline">
-              Caderno de campo
             </span>
           </Link>
           <div className="flex items-center gap-3 text-sm">
-            <span className="hidden font-mono text-[11px] uppercase tracking-wider text-muted-foreground sm:inline">
+            <span className="hidden text-[13px] text-muted-foreground sm:inline">
               {session?.user?.name}
             </span>
             <form action={async () => { "use server"; await signOut({ redirectTo: "/login" }); }}>
@@ -63,7 +60,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
         {children}
       </main>
       <footer className="border-t border-border/70 py-6">
-        <p className="mx-auto max-w-6xl px-6 font-mono text-[10px] uppercase tracking-[0.25em] text-muted-foreground">
+        <p className="mx-auto max-w-6xl px-6 text-xs text-muted-foreground">
           Expedição pessoal · Lisboa · Continente.pt
         </p>
       </footer>

@@ -84,7 +84,7 @@ export default async function Dashboard() {
         <div className="topo pointer-events-none absolute inset-0 opacity-80" />
         <div className="relative grid gap-8 p-8 md:grid-cols-[minmax(0,1fr)_auto] md:items-end">
           <div className="space-y-5">
-            <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-muted-foreground">
+            <p className="text-[11px] uppercase tracking-[0.1em] font-medium text-muted-foreground">
               Registo — {new Date().toLocaleDateString("pt-PT", { weekday: "long", day: "numeric", month: "long" })}
             </p>
             <div className="space-y-1.5">
@@ -132,7 +132,7 @@ export default async function Dashboard() {
             <div className="flex items-center justify-between">
               <CardTitle>Treino de hoje</CardTitle>
               {todayWorkout && (
-                <span className="flex items-center gap-1 font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
+                <span className="flex items-center gap-1 text-[11px] uppercase tracking-wider font-medium text-muted-foreground">
                   {todayWorkout.mode === "indoor" ? (
                     <Dumbbell className="size-3.5" />
                   ) : (
@@ -152,7 +152,7 @@ export default async function Dashboard() {
                 <p className="font-display text-2xl font-medium leading-tight transition-colors group-hover:text-primary">
                   {todayWorkout.namePt}
                 </p>
-                <p className="font-mono text-xs uppercase tracking-wider text-muted-foreground">
+                <p className="text-xs uppercase tracking-wider font-medium text-muted-foreground">
                   {todayWorkout.duration} min · começar →
                 </p>
               </Link>
@@ -166,7 +166,7 @@ export default async function Dashboard() {
           <CardHeader>
             <div className="flex items-center justify-between">
               <CardTitle>Refeições de hoje</CardTitle>
-              <Link href="/refeicoes" className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground hover:text-primary">
+              <Link href="/refeicoes" className="text-[11px] uppercase tracking-wider font-medium text-muted-foreground hover:text-primary">
                 ver semana →
               </Link>
             </div>
@@ -180,7 +180,7 @@ export default async function Dashboard() {
               <ul className="divide-y divide-border/60">
                 {todayMeals.map((m) => (
                   <li key={m.mealType} className="group flex items-baseline justify-between gap-4 py-3 first:pt-0 last:pb-0">
-                    <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
+                    <span className="text-[11px] uppercase tracking-[0.08em] font-medium text-muted-foreground">
                       {MEAL_LABEL[m.mealType]}
                     </span>
                     <Link

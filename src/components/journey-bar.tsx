@@ -15,7 +15,7 @@ export function JourneyBar({ startKg, currentKg, targetKg }: Props) {
 
   return (
     <div className="space-y-2">
-      <div className="flex items-baseline justify-between font-mono text-[11px] uppercase tracking-wider text-muted-foreground">
+      <div className="flex items-baseline justify-between text-[11px] uppercase tracking-[0.08em] font-medium text-muted-foreground">
         <span>{startKg.toFixed(0)} kg — partida</span>
         <span>{targetKg.toFixed(0)} kg — alvo</span>
       </div>
@@ -45,7 +45,7 @@ export function JourneyBar({ startKg, currentKg, targetKg }: Props) {
         </div>
       </div>
 
-      <p className="font-mono text-[11px] uppercase tracking-wider text-muted-foreground">
+      <p className="text-[11px] uppercase tracking-[0.08em] font-medium text-muted-foreground">
         {remaining.toFixed(1)} kg por {losing ? "perder" : "ganhar"} — {pct.toFixed(0)}% feito
       </p>
     </div>

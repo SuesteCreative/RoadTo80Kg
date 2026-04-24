@@ -9,7 +9,7 @@ import {
   products,
   weightLogs,
 } from "@/lib/db/schema";
-import { and, desc, eq } from "drizzle-orm";
+import { and, desc, eq, sql as dsql } from "drizzle-orm";
 import { weekStartISO } from "@/lib/calc/date";
 import { computeTargets } from "@/lib/calc/tdee";
 import { recipeTotalsPerServing } from "@/lib/calc/nutrition";
@@ -79,9 +79,12 @@ export async function regenerateWeek() {
 
   await db.delete(mealPlan).where(and(eq(mealPlan.userId, uid), eq(mealPlan.weekStart, ws)));
 
+  // Servings = nº total de refeições cozinhadas nesse slot (pessoas × dias).
+  // Default: jantar 4 (2 hoje + 2 sobras para almoço), pa/snack 2 (1 por pessoa),
+  // almoço 0 (sai das sobras do jantar anterior).
   for (const day of plan) {
     for (const mt of MEAL_TYPES) {
-      const servings = mt === "dinner" ? "2" : mt === "lunch" ? "0" : "1";
+      const servings = mt === "dinner" ? "4" : mt === "lunch" ? "0" : "2";
       await db.insert(mealPlan).values({
         userId: uid,
         weekStart: ws,
@@ -100,4 +103,22 @@ export async function regenerateWeek() {
     days: plan.length,
     avgKcal: Math.round(plan.reduce((s, d) => s + d.kcal, 0) / plan.length),
   };
+}
+
+export async function updateSlotServings(
+  day: number,
+  mealType: "breakfast" | "snack" | "lunch" | "dinner",
+  servings: number,
+) {
+  const session = await auth();
+  const uid = Number(session!.user.id);
+  const ws = weekStartISO();
+  const clamped = Math.max(0, Math.min(20, Math.round(servings)));
+  await db.execute(dsql`
+    UPDATE meal_plan SET servings = ${String(clamped)}
+    WHERE user_id = ${uid} AND week_start = ${ws}
+      AND day = ${day} AND meal_type = ${mealType}
+  `);
+  revalidatePath("/refeicoes");
+  return { servings: clamped };
 }

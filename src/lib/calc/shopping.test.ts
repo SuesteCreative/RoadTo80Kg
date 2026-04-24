@@ -11,15 +11,16 @@ describe("aggregateShopping", () => {
     { recipeId: 10, productId: 2, qtyG: 75 },
   ];
 
-  it("sums recipe items across plans, scales by portions, converts to packs", () => {
+  it("sums recipe items across plans, scales by total servings, converts to packs", () => {
+    // servings = total portions cooked (e.g. dinner for 2 × 2 days = 4)
     const plans = [
-      { recipeId: 10, servings: 1 },
-      { recipeId: 10, servings: 1 },
+      { recipeId: 10, servings: 4 },
+      { recipeId: 10, servings: 4 },
     ];
-    const out = aggregateShopping(plans, recipeItems, products, 2);
+    const out = aggregateShopping(plans, recipeItems, products);
     const frango = out.find((x) => x.productId === 1)!;
-    expect(frango.qtyG).toBe(200 * 1 * 2 + 200 * 1 * 2);
-    expect(frango.qtyUnits).toBe(Math.ceil(800 / 500));
-    expect(frango.priceEur).toBe(Number((4.5 * 2).toFixed(2)));
+    expect(frango.qtyG).toBe(200 * 4 + 200 * 4);
+    expect(frango.qtyUnits).toBe(Math.ceil(1600 / 500));
+    expect(frango.priceEur).toBe(Number((4.5 * 4).toFixed(2)));
   });
 });

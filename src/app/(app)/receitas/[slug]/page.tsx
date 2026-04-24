@@ -53,14 +53,14 @@ export default async function ReceitaDetail({
     <article className="space-y-8">
       <Link
         href="/receitas"
-        className="inline-flex items-center gap-1 font-mono text-[10px] uppercase tracking-[0.25em] text-muted-foreground hover:text-primary"
+        className="inline-flex items-center gap-1 text-[11px] uppercase tracking-[0.1em] font-medium text-muted-foreground hover:text-primary"
       >
         ← receituário
       </Link>
 
       <header className="space-y-3 border-b border-border pb-6">
         <div className="flex items-start justify-between gap-4">
-          <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-muted-foreground">
+          <p className="text-[11px] uppercase tracking-[0.1em] font-medium text-muted-foreground">
             {MEAL_LABEL[r.mealType] ?? r.mealType} · {r.prepMin} min · {r.servings} dose
             {r.servings > 1 ? "s" : ""}
           </p>

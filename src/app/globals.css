@@ -66,8 +66,8 @@
   }
   h1, h2, h3, .font-display {
     font-family: var(--font-display), ui-serif, Georgia, serif;
-    font-optical-sizing: auto;
-    letter-spacing: -0.01em;
+    letter-spacing: -0.015em;
+    font-weight: 400;
   }
   .font-mono, pre, code, .tabular-nums {
     font-family: var(--font-mono), ui-monospace, SFMono-Regular, monospace;

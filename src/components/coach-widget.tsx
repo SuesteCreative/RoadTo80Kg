@@ -92,7 +92,7 @@ export default function CoachWidget() {
             <button
               type="button"
               onClick={() => setAnswer(null)}
-              className="mt-2 font-mono text-[10px] uppercase tracking-wider text-muted-foreground hover:text-primary"
+              className="mt-2 text-[11px] uppercase tracking-wider font-medium text-muted-foreground hover:text-primary"
             >
               outra pergunta →
             </button>

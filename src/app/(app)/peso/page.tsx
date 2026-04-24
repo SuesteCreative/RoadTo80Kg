@@ -31,13 +31,13 @@ export default async function PesoPage() {
     <div className="space-y-6">
       <header className="flex flex-wrap items-baseline justify-between gap-3">
         <div className="space-y-1">
-          <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-muted-foreground">
+          <p className="text-[11px] uppercase tracking-[0.1em] font-medium text-muted-foreground">
             Registo de peso
           </p>
           <h1 className="font-display text-3xl font-medium tracking-tight">Pesagens</h1>
         </div>
         {latest && (
-          <div className="flex items-baseline gap-4 font-mono text-[11px] uppercase tracking-wider text-muted-foreground">
+          <div className="flex items-baseline gap-4 text-[11px] uppercase tracking-[0.08em] font-medium text-muted-foreground">
             <span>
               Actual <strong className="ml-1 font-mono text-foreground">{Number(latest.weightKg).toFixed(1)} kg</strong>
             </span>

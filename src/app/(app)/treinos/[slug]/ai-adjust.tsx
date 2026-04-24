@@ -128,7 +128,7 @@ export default function AiAdjustWorkout({ slug }: { slug: string }) {
           <div className="space-y-4">
             <div className="rounded-md border border-border bg-paper/40 p-4 max-h-[50vh] overflow-y-auto space-y-3">
               <div>
-                <p className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
+                <p className="text-[11px] uppercase tracking-wider font-medium text-muted-foreground">
                   Proposta
                 </p>
                 <h3 className="font-display text-xl font-medium">{result.name}</h3>

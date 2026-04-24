@@ -28,8 +28,10 @@ export function aggregateShopping(
   plans: MealPlanRow[],
   recipeItems: RecipeItem[],
   products: ProductMeta[],
-  portionMultiplier = 2,
+  portionMultiplier = 1,
 ): AggregatedItem[] {
+  // meal_plan.servings now stores total portions cooked (people × meals).
+  // Kept portionMultiplier as an escape hatch but defaults to 1.
   const byProduct = new Map<number, number>();
   for (const row of plans) {
     const itemsForRecipe = recipeItems.filter((ri) => ri.recipeId === row.recipeId);

@@ -14,7 +14,7 @@ export default async function PerfilPage() {
   return (
     <div className="space-y-6">
       <header className="space-y-1">
-        <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-muted-foreground">
+        <p className="text-[11px] uppercase tracking-[0.1em] font-medium text-muted-foreground">
           Parâmetros pessoais
         </p>
         <h1 className="font-display text-3xl font-medium tracking-tight">

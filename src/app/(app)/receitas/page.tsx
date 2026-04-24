@@ -45,7 +45,7 @@ export default async function ReceitasPage() {
   return (
     <div className="space-y-10">
       <header className="space-y-1">
-        <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-muted-foreground">
+        <p className="text-[11px] uppercase tracking-[0.1em] font-medium text-muted-foreground">
           Receituário — 30 fichas
         </p>
         <h1 className="font-display text-3xl font-medium tracking-tight">Receitas</h1>
@@ -55,7 +55,7 @@ export default async function ReceitasPage() {
         <section key={mt} className="space-y-4">
           <div className="flex items-baseline justify-between border-b border-border pb-2">
             <h2 className="font-display text-xl font-medium">{MEAL_LABEL[mt]}</h2>
-            <span className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
+            <span className="text-[11px] uppercase tracking-wider font-medium text-muted-foreground">
               {MEAL_SUB[mt]} · {grouped[mt].length}
             </span>
           </div>
@@ -77,7 +77,7 @@ export default async function ReceitasPage() {
                   href={`/receitas/${r.slug}`}
                   className="group block rounded-lg border border-border bg-card p-5 shadow-paper transition-all hover:border-primary/40 hover:shadow-[0_8px_32px_-12px_rgba(40,20,10,.18)]"
                 >
-                  <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
+                  <p className="text-[11px] uppercase tracking-[0.08em] font-medium text-muted-foreground">
                     Nº {String(idx + 1).padStart(2, "0")}
                   </p>
                   <h3 className="mt-1 font-display text-[1.15rem] font-medium leading-tight transition-colors group-hover:text-primary">

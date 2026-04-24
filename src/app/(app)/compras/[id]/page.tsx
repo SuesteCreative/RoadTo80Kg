@@ -44,7 +44,7 @@ export default async function ShoppingListDetail({
     <div className="space-y-6">
       <header className="flex flex-wrap items-end justify-between gap-3">
         <div className="space-y-1">
-          <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-muted-foreground">
+          <p className="text-[11px] uppercase tracking-[0.1em] font-medium text-muted-foreground">
             Lista · {list.periodStart} — {list.periodEnd}
           </p>
           <h1 className="font-display text-3xl font-medium tracking-tight">Compras</h1>
@@ -76,7 +76,7 @@ export default async function ShoppingListDetail({
                   >
                     {it.namePt}
                   </div>
-                  <div className="mt-0.5 font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
+                  <div className="mt-0.5 text-[11px] uppercase tracking-wider font-medium text-muted-foreground">
                     {it.category}
                   </div>
                 </div>

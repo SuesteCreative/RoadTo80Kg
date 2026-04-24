@@ -52,7 +52,6 @@ export async function generateBiweekly() {
       packSizeG: p.packSizeG != null ? Number(p.packSizeG) : null,
       latestPriceEur: priceBy.get(p.id) ?? null,
     })),
-    2,
   );
 
   const total = aggregated.reduce((s, x) => s + (x.priceEur ?? 0), 0);

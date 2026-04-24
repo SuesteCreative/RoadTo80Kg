@@ -45,7 +45,7 @@ export default async function ProdutosPage() {
     <div className="space-y-8">
       <header className="flex flex-wrap items-end justify-between gap-3">
         <div className="space-y-1">
-          <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-muted-foreground">
+          <p className="text-[11px] uppercase tracking-[0.1em] font-medium text-muted-foreground">
             Catálogo · Continente.pt
           </p>
           <h1 className="font-display text-3xl font-medium tracking-tight">Produtos</h1>
@@ -63,7 +63,7 @@ export default async function ProdutosPage() {
             <CardContent className="p-0">
               <table className="w-full text-sm">
                 <thead className="border-b border-border bg-muted/30 text-left">
-                  <tr className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
+                  <tr className="text-[11px] uppercase tracking-wider font-medium text-muted-foreground">
                     <th className="p-3 font-normal">Produto</th>
                     <th className="p-3 font-normal">kcal/100</th>
                     <th className="p-3 font-normal">Pack</th>
@@ -96,7 +96,7 @@ export default async function ProdutosPage() {
                               </span>
                             )}
                           </div>
-                          <div className="mt-0.5 font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
+                          <div className="mt-0.5 text-[11px] uppercase tracking-wider font-medium text-muted-foreground">
                             {p.brand}
                           </div>
                         </td>

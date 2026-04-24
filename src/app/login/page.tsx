@@ -30,7 +30,7 @@ export default function LoginPage({
       <div className="topo pointer-events-none fixed inset-0 opacity-80" />
       <div className="relative w-full max-w-sm space-y-6">
         <header className="space-y-1 text-center">
-          <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-muted-foreground">
+          <p className="text-[11px] uppercase tracking-[0.1em] font-medium text-muted-foreground">
             Caderno de campo
           </p>
           <h1 className="font-display text-3xl font-medium tracking-tight">

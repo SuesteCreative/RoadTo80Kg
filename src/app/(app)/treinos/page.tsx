@@ -30,7 +30,7 @@ export default async function TreinosPage() {
   return (
     <div className="space-y-6">
       <header className="space-y-1">
-        <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-muted-foreground">
+        <p className="text-[11px] uppercase tracking-[0.1em] font-medium text-muted-foreground">
           Rotina semanal · 30 min/dia
         </p>
         <h1 className="font-display text-3xl font-medium tracking-tight">Treinos</h1>
@@ -51,7 +51,7 @@ export default async function TreinosPage() {
               <CardHeader className="relative space-y-0">
                 <div className="flex items-baseline justify-between">
                   <CardTitle className="text-base">
-                    <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
+                    <span className="text-[11px] uppercase tracking-[0.08em] font-medium text-muted-foreground">
                       {dayLabelPt(d)}
                     </span>
                     {isToday && (
@@ -59,7 +59,7 @@ export default async function TreinosPage() {
                     )}
                   </CardTitle>
                   {row && (
-                    <span className="flex items-center gap-1 font-mono text-[10px] uppercase tracking-wider text-muted-foreground">
+                    <span className="flex items-center gap-1 text-[11px] uppercase tracking-wider font-medium text-muted-foreground">
                       {row.mode === "indoor" ? (
                         <Dumbbell className="size-3" />
                       ) : (
@@ -80,7 +80,7 @@ export default async function TreinosPage() {
                       <p className="font-display text-[1.1rem] font-medium leading-tight transition-colors group-hover:text-primary">
                         {row.name}
                       </p>
-                      <p className="font-mono text-[11px] uppercase tracking-wider text-muted-foreground">
+                      <p className="text-[11px] uppercase tracking-[0.08em] font-medium text-muted-foreground">
                         {row.duration} min · começar →
                       </p>
                     </Link>

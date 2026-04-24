@@ -20,7 +20,7 @@ export default async function ComprasPage() {
   return (
     <div className="space-y-6">
       <header className="space-y-1">
-        <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-muted-foreground">
+        <p className="text-[11px] uppercase tracking-[0.1em] font-medium text-muted-foreground">
           Mantimentos
         </p>
         <h1 className="font-display text-3xl font-medium tracking-tight">Listas de compras</h1>
@@ -43,7 +43,7 @@ export default async function ComprasPage() {
                     className="flex items-baseline gap-3 font-display text-base transition-colors group-hover:text-primary"
                   >
                     <span>{l.periodStart}</span>
-                    <span className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">→</span>
+                    <span className="text-[11px] uppercase tracking-wider font-medium text-muted-foreground">→</span>
                     <span>{l.periodEnd}</span>
                   </Link>
                   <span className="font-mono text-sm tabular-nums text-muted-foreground">
