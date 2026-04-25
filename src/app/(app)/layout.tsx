@@ -22,14 +22,14 @@ export default async function AppLayout({ children }: { children: React.ReactNod
       <header className="relative border-b border-border/70 bg-paper/60 backdrop-blur-sm">
         <div className="topo pointer-events-none absolute inset-0 opacity-60" />
         <div className="relative mx-auto flex max-w-6xl items-baseline justify-between gap-4 px-6 pt-6 pb-2">
-          <Link href="/" className="group flex items-center gap-3">
+          <Link href="/" className="group flex items-center">
             <Image
-              src="/logo-sm.png"
+              src="/brand/logo-color.svg"
               alt="Road to 80 Kg"
-              width={44}
-              height={44}
+              width={170}
+              height={108}
               priority
-              className="size-11 rounded-md shadow-sm"
+              className="h-10 w-auto"
             />
             <span className="sr-only">Road to 80 Kg</span>
           </Link>

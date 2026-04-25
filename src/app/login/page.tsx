@@ -32,12 +32,12 @@ export default function LoginPage({
       <div className="relative w-full max-w-sm space-y-6">
         <header className="flex flex-col items-center space-y-3 text-center">
           <Image
-            src="/logo.png"
+            src="/brand/logo-color.svg"
             alt="Road to 80 Kg"
-            width={120}
-            height={120}
+            width={300}
+            height={190}
             priority
-            className="size-28 rounded-xl shadow-md"
+            className="w-56 h-auto"
           />
           <p className="text-[11px] uppercase tracking-[0.2em] font-medium text-muted-foreground">
             Caderno de campo
